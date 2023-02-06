@@ -17,13 +17,17 @@ config would be passed in at store level
 
 a default config is supplied.
 """
-def create_app(app_name, testing=False, favicon_url=""):
+def create_app(app_name, favicon_url="", store_bp=test_bp, testing=False):
 
-    app = FlaskBase(__name__,
+    app = FlaskBase(
+    __name__,
     app_name,
+    template_folder="../templates",
     favicon_url=favicon_url,
     )
-    app.config.from_object(config)
+
+    app.register_blueprint(store_bp)
+    # app.config.from_object(config)
     app.testing = testing
 
     csrf.init_app(app)
