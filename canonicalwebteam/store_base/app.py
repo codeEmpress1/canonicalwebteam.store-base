@@ -23,7 +23,6 @@ def create_app(app_name, template_folder, static_folder, favicon_url, store_bp=t
     __name__,
     app_name,
     template_folder=template_folder,
-    static_url_path="",
     static_folder=static_folder,
     favicon_url=favicon_url,
     )
