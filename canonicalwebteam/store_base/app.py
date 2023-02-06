@@ -17,12 +17,13 @@ config would be passed in at store level
 
 a default config is supplied.
 """
-def create_app(app_name, static_folder, favicon_url, store_bp=test_bp, testing=False):
+def create_app(app_name, template_folder, static_folder, favicon_url, store_bp=test_bp, testing=False):
 
     app = FlaskBase(
     __name__,
     app_name,
-    template_folder="../templates",
+    template_folder=template_folder,
+    static_url_path="",
     static_folder=static_folder,
     favicon_url=favicon_url,
     )
