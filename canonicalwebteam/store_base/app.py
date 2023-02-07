@@ -8,10 +8,10 @@ from canonicalwebteam.flask_base.app import FlaskBase
 import canonicalwebteam.store_base.utils.config as config
 from canonicalwebteam.store_base.utils.extensions import csrf
 from canonicalwebteam.store_base.sample_blueprint.views import test_bp
+from canonicalwebteam.store_base.auth.login.views import login
 
 
 """
-
 config would be passed in at store level
 
 a default config is supplied.
@@ -26,6 +26,7 @@ def create_app(app_name, store_bp=test_bp, testing=False):
 
     csrf.init_app(app)
 
+    app.register_blueprint(login)
 
     @app.route("/account.json")
     def get_account_json():
