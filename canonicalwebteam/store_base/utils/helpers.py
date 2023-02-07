@@ -152,3 +152,10 @@ def modify_headers(soup, decrease_step=2):
         add_header_id(header, levels)
 
     return soup
+
+
+def is_safe_url(url):
+    """
+    Return True if the URL is inside the same app
+    """
+    return url.startswith(request.url_root) or url.startswith("/")
