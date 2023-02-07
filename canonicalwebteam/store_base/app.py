@@ -26,3 +26,21 @@ def create_app(app_name, store_bp=test_bp, testing=False):
 
     csrf.init_app(app)
 
+
+    @app.route("/account.json")
+    def get_account_json():
+        """
+        A JSON endpoint to request login status
+        """
+        publisher = None
+
+        if "publisher" in session:
+            publisher = session["publisher"]
+
+        response = {"publisher": publisher}
+        response = make_response(response)
+        response.headers["Cache-Control"] = "no-store"
+
+        return response
+
+    return app
