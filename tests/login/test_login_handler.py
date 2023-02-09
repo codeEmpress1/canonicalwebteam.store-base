@@ -4,21 +4,21 @@ import requests
 from pymacaroons import Macaroon
 from canonicalwebteam.store_base.app import create_app
 
+
 class LoginTest(TestCase):
-    
     def __init__(self, api_url) -> super:
         return super().__init__(api_url)
 
     def setup(self, api_url):
         self.endpoint_url = "/login"
         self.api_url = api_url
-    
+
     def create_app(self):
         app = create_app(testing=True)
         app.secret_key = "secret_key"
         app.config["WTF_CSRF_METHODS"] = []
 
-        return app 
+        return app
 
     @responses.activate
     def test_login_handler_redirect(self):
