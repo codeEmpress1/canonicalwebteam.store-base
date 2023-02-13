@@ -28,8 +28,8 @@ when get_macaroon and issue_macaroon in SC and CH in store_api are unified
 
 
 # this route is presently login in CH and login-beta in SC
-@login.route("/login")
-def candid_login(macaroon_response, authenticated_user_redirect):
+# @login.route("/login")
+def candid_login(macaroon_response, cb_url, authenticated_user_redirect):
 
     if is_authenticated(session):
         return redirect(url_for(authenticated_user_redirect))
@@ -38,7 +38,7 @@ def candid_login(macaroon_response, authenticated_user_redirect):
 
     login_url = candid.get_login_url(
         macaroon=session["account-macaroon"],
-        callback_url=url_for("login.login_callback", _external=True),
+        callback_url=cb_url,
         state=generate_csrf(),
     )
 
@@ -53,8 +53,8 @@ def candid_login(macaroon_response, authenticated_user_redirect):
     return redirect(login_url, 302)
 
 
-@login.route("/login/callback")
-def login_callback(
+# @login.route("/login/callback")
+def all_login_callback(
     account_api,
     exchange_macaroon_method,
     redirect_url,
