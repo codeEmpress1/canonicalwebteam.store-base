@@ -1,3 +1,4 @@
+from pprint import pprint
 import talisker
 from flask import Blueprint, session, redirect, request, url_for, abort
 from flask_wtf.csrf import generate_csrf, validate_csrf
@@ -79,8 +80,7 @@ def all_login_callback(
         session["account-macaroon"], candid_macaroon
     )
     session["account-auth"] = exchange_macaroon_method(issued_macaroon)
-
-    session.update(account_api.macaroon_info(session["account_auth"]))
+    session.update(account_api.macaroon_info(session["account-auth"]))
 
     if store_specific_logic:
         store_specific_logic()
