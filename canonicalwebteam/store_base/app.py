@@ -35,12 +35,12 @@ def create_app(app_name, store_bp=sample_bp, testing=False):
         """
         A JSON endpoint to request login status
         """
-        publisher = None
-        
-        if "publisher" in session:
-            publisher = session["publisher"]
+        account = None
 
-        response = {"publisher": publisher}
+        if "account" in session:
+            account = session["account"]
+
+        response = {"account": account}
         response = make_response(response)
         response.headers["Cache-Control"] = "no-store"
 
