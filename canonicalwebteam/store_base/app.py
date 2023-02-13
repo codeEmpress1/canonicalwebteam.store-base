@@ -36,7 +36,7 @@ def create_app(app_name, store_bp=sample_bp, testing=False):
         A JSON endpoint to request login status
         """
         publisher = None
-
+        
         if "publisher" in session:
             publisher = session["publisher"]
 
