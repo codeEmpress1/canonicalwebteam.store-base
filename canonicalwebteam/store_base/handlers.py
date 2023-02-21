@@ -15,7 +15,7 @@ from canonicalwebteam.store_api.exceptions import (
 def set_handlers(app, store_utility_processor):
     @app.context_processor
     def utility_processor():
-        return store_utility_processor
+        return store_utility_processor()
 
     @app.errorhandler(500)
     @app.errorhandler(501)
