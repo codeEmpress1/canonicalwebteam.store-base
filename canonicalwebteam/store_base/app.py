@@ -10,7 +10,7 @@ from canonicalwebteam.flask_base.app import FlaskBase
 import canonicalwebteam.store_base.utils.config as config
 from canonicalwebteam.store_base.utils.extensions import csrf
 from canonicalwebteam.store_base.sample_blueprint.views import sample_bp
-from canonicalwebteam.store_base.auth.login.views import login
+# from canonicalwebteam.store_base.auth.login.views import login
 
 from canonicalwebteam.store_base.handlers import set_handlers
 
