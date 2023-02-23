@@ -30,7 +30,7 @@ def create_app(app_name, store_bp=sample_bp, utility_processor=None, testing=Fal
 
     csrf.init_app(app)
     set_handlers(app, utility_processor)
-    app.register_blueprint(login)
+    # app.register_blueprint(login)
 
     @app.route("/account.json")
     def get_account_json():
