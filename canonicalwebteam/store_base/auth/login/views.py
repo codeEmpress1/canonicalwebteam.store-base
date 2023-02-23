@@ -16,9 +16,9 @@ candid = CandidClient(request_session)
 
 
 # @login.route("/logout")
-def logout():
+def logout(redirect_url):
     empty_session(session)
-    return redirect("/")
+    return redirect(redirect_url, 302)
 
 
 """
