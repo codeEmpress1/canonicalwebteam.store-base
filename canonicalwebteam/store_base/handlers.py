@@ -1,6 +1,5 @@
 import flask
-from flask import render_template, request
-from datetime import datetime
+from flask import render_template
 
 from canonicalwebteam.store_api.exceptions import (
     StoreApiError,
@@ -9,13 +8,14 @@ from canonicalwebteam.store_api.exceptions import (
     StoreApiResponseDecodeError,
     StoreApiResponseErrorList,
     StoreApiResponseError,
-    StoreApiTimeoutError
+    StoreApiTimeoutError,
 )
 
+
 def set_handlers(app, store_utility_processor):
-    @app.context_processor()
+    @app.context_processor
     def utility_processor():
-        return store_utility_processor
+        return store_utility_processor()
 
     @app.errorhandler(500)
     @app.errorhandler(501)
@@ -57,7 +57,6 @@ def set_handlers(app, store_utility_processor):
             ),
             status_code,
         )
-
 
     @app.errorhandler(StoreApiResponseDecodeError)
     @app.errorhandler(StoreApiResponseError)

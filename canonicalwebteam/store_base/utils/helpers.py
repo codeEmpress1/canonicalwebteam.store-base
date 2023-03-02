@@ -159,3 +159,10 @@ def is_safe_url(url):
     Return True if the URL is inside the same app
     """
     return url.startswith(request.url_root) or url.startswith("/")
+
+
+def get_icon(media):
+    icons = [m["url"] for m in media if m["type"] == "icon"]
+    if len(icons) > 0:
+        return icons[0]
+    return ""

@@ -5,6 +5,7 @@ def is_authenticated(session):
     """
     return "account-auth" in session
 
+
 def empty_session(session):
     """
     Empty the session, used to logout.

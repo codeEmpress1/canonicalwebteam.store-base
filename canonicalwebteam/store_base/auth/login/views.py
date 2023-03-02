@@ -1,23 +1,25 @@
-import os
+from pprint import pprint
 import talisker
 from flask import Blueprint, session, redirect, request, url_for, abort
 from flask_wtf.csrf import generate_csrf, validate_csrf
 from canonicalwebteam.candid import CandidClient
-from utils.constants import LOGIN_URL, LOGIN_LAUNCHPAD_TEAM
-from utils.helpers import is_safe_url
-from authentication import empty_session, is_authenticated
+from canonicalwebteam.store_base.utils.helpers import is_safe_url
+from canonicalwebteam.store_base.auth.authentication import empty_session, is_authenticated
 
-login = Blueprint(
-    "login", __name__, template_folder="/templates", static_folder="/static"
-)
+# Login blueprint should be passed in at store level for now
+# login = Blueprint(
+#     "login", __name__, template_folder="/templates", static_folder="/static"
+# )
 
 request_session = talisker.requests.get_session()
 candid = CandidClient(request_session)
 
-@login.route("/logout")
-def logout():
+
+# @login.route("/logout")
+def logout(redirect_url):
     empty_session(session)
-    redirect("/")
+    return redirect(redirect_url, 302)
+
 
 """
 macaroon_response passed in as an arg would be removed in the near future
@@ -25,20 +27,21 @@ macaroon_response passed in as an arg would be removed in the near future
 when get_macaroon and issue_macaroon in SC and CH in store_api are unified
 
 """
+
+
 # this route is presently login in CH and login-beta in SC
-@login.route("/login")
-def candid_login(macaroon_response, authenticated_user_redirect):
+# @login.route("/login")
+def candid_login(macaroon_response, cb_url, authenticated_user_redirect):
 
     if is_authenticated(session):
-        return redirect(
-            url_for(authenticated_user_redirect)
-        )
+        return redirect(url_for(authenticated_user_redirect))
+
     session["account-macaroon"] = macaroon_response
 
     login_url = candid.get_login_url(
         macaroon=session["account-macaroon"],
-        callback_url=url_for("login.login_callback", _external=True),
-        state=generate_csrf()
+        callback_url=cb_url,
+        state=generate_csrf(),
     )
 
     # Next URL to redirect the user after the login
@@ -52,14 +55,20 @@ def candid_login(macaroon_response, authenticated_user_redirect):
     return redirect(login_url, 302)
 
 
-@login.route("/login/callback")
-def login_callback(account_api, exchange_macaroon_method, redirect_url, store_specific_logic=None):
-    # exchange_macaroon_method == exchange_macaroon in CH and exchange_dashboard_macaroon in SC, 
+# @login.route("/login/callback")
+def candid_login_callback(
+    account_api,
+    exchange_macaroon_method,
+    redirect_url,
+    store_specific_logic=None,
+):
+    # exchange_macaroon_method ==
+    # exchange_macaroon in CH and exchange_dashboard_macaroon in SC,
     # to be unified in the near future
     code = request.args["code"]
     state = request.args["state"]
 
-    #To avoid  csrf attack
+    # To avoid  csrf attack
     validate_csrf(state)
 
     discharged_token = candid.discharge_token(code)
@@ -71,15 +80,10 @@ def login_callback(account_api, exchange_macaroon_method, redirect_url, store_sp
     issued_macaroon = candid.get_serialized_bakery_macaroon(
         session["account-macaroon"], candid_macaroon
     )
-    session["account-auth"] = exchange_macaroon_method(
-        issued_macaroon
-    )
-
-    session.update(
-        account_api.macaroon_info(session["account_auth"])
-    )
+    session["account-auth"] = exchange_macaroon_method(issued_macaroon)
+    session.update(account_api.macaroon_info(session["account-auth"]))
 
     if store_specific_logic:
         store_specific_logic()
-    
+
     return redirect(session.pop("next_url", redirect_url), 302)
