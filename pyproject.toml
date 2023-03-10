@@ -23,6 +23,12 @@ pymacaroons = "^0.13.0"
 "ruamel.yaml" = "^0.17.21"
 pipenv = "^2022.12.19"
 python-dotenv = "^0.21.1"
+slugify = "^0.0.1"
+pytest = "^7.2.2"
+responses = "^0.22.0"
+flask-testing = "^0.8.1"
+talisker = "^0.21.3"
+black = "^23.1.0"
 
 [tool.poetry.group.dev.dependencies]
 Flask-Testing = "^0.8.1"
