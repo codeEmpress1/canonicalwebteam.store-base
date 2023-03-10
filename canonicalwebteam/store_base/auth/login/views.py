@@ -4,7 +4,10 @@ from flask import Blueprint, session, redirect, request, url_for, abort
 from flask_wtf.csrf import generate_csrf, validate_csrf
 from canonicalwebteam.candid import CandidClient
 from canonicalwebteam.store_base.utils.helpers import is_safe_url
-from canonicalwebteam.store_base.auth.authentication import empty_session, is_authenticated
+from canonicalwebteam.store_base.auth.authentication import (
+    empty_session,
+    is_authenticated,
+)
 
 # Login blueprint should be passed in at store level for now
 # login = Blueprint(
