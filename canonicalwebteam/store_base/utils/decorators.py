@@ -3,7 +3,7 @@ import functools
 from distutils.util import strtobool
 
 import flask
-from auth.authentication import is_authenticated
+from canonicalwebteam.store_base.auth.authentication import is_authenticated
 
 def login_required(f):
     @functools.wraps(f)

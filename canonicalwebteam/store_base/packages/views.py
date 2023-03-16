@@ -5,10 +5,10 @@ from flask import Blueprint, request, session, make_response, current_app as app
 from canonicalwebteam.store_base.packages.logic import get_packages, get_snaps_account_info
 from canonicalwebteam.store_base.utils.config import PACKAGE_PARAMS
 
-from canonicalwebteam.store_base.auth.authentication import login_required
+from canonicalwebteam.store_base.utils.decorators import login_required
 
 package = Blueprint(
-    "store",
+    "package",
     __name__,
 )
 
@@ -20,6 +20,7 @@ def store():
     store, fields, size = params["store"], params["fields"], params["size"]
     page = int(request.args.get("page", 1))
     return get_packages(store, fields, size, page)
+
 
 @package.route("/<package_type>")
 @login_required
