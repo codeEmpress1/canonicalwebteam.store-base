@@ -27,7 +27,7 @@ def fetch_packages(store_api, fields: List[str]):
     packages = store.find(fields=fields).get("results", [])
     response = make_response({"packages": packages})
     response.cache_control.max_age = 3600
-    return response
+    return response.json
 
 
 def parse_package_for_card(package: Dict[str, Any], package_type) -> Package:
@@ -49,42 +49,35 @@ def parse_package_for_card(package: Dict[str, Any], package_type) -> Package:
     }
 
     if package_type == "snap":
-        resp["package"]["description"] = package["snap"]["summary"]
-        resp["package"]["display_name"] = package["snap"]["title"]
+        snap = package.get("snap", {})
+        publisher = snap.get("publisher", {})
+        resp["package"]["description"] = snap.get("summary", "")
+        resp["package"]["display_name"] = snap.get("title", "")
         resp["package"]["type"] = "snap"
-        resp["package"]["name"] = package["name"]
+        resp["package"]["name"] = package.get("name", "")
         # platform to be fetched
         # resp["package"]["platforms"] = package["store_front"]["deployable-on"]
-        resp["publisher"]["display_name"] = package["snap"]["publisher"][
-            "display-name"
-        ]
-        resp["publisher"]["name"] = package["snap"]["publisher"]["username"]
-        resp["publisher"]["validation"] = package["snap"]["publisher"][
-            "validation"
-        ]
-        resp["categories"] = package["snap"]["categories"]
+        resp["publisher"]["display_name"] = publisher.get("display-name", "")
+        resp["publisher"]["name"] = publisher.get("username", "")
+        resp["publisher"]["validation"] = publisher.get("validation", "")
+        resp["categories"] = snap.get("categories", [])
         resp["package"]["icon_url"] = helpers.get_icon(
             package["snap"]["media"]
         )
 
     if package_type == "charm" or package_type == "bundle":
-        resp["package"]["description"] = package["result"]["summary"]
-        resp["package"]["display_name"] = package["store_front"][
-            "display-name"
-        ]
-        resp["package"]["type"] = package["type"]
-        resp["package"]["name"] = package["name"]
-        resp["package"]["platforms"] = package["store_front"]["deployable-on"]
-        resp["publisher"]["display_name"] = package["result"]["publisher"][
-            "display-name"
-        ]
-        # resp["publisher"]["validation"] = package["publisher"][
-        # "validation"
-        # ]
-        resp["categories"] = package["store_front"]["categories"]
-        resp["package"]["icon_url"] = helpers.get_icon(
-            package["result"]["media"]
-        )
+        result = package.get("result", {})
+        publisher = result.get("publisher", {})
+        
+        resp["package"]["type"] = package.get("type", "")
+        resp["package"]["name"] = package.get("name", "")
+        resp["package"]["description"] = result.get("summary", "")
+        resp["package"]["display_name"] = format_slug(result.get("display_name", ""))
+        resp["package"]["platforms"] = result.get("deployable-on", [])
+        resp["publisher"]["display_name"] = publisher.get("display-name", "")
+        resp["publisher"]["validation"] = publisher.get("validation", "")
+        resp["categories"] = result.get("categories", [])
+        resp["package"]["icon_url"] = helpers.get_icon(result.get("media", []))
 
     return resp
 
@@ -92,12 +85,14 @@ def parse_package_for_card(package: Dict[str, Any], package_type) -> Package:
 def paginate(
     packages: List[Package], page: int, size: int, total_pages: int
 ) -> List[Package]:
-    if page < 1 or page > total_pages:
+    
+    if page > total_pages:
+        page = total_pages
+    if page < 1:
         page = 1
 
     start = (page - 1) * size
     end = start + size
-
     if end > len(packages):
         end = len(packages)
 
@@ -114,7 +109,7 @@ def get_packages(
 
     packages = fetch_packages(store, fields).get("packages", [])
     total_pages = -(len(packages) // -size)
-    packages_per_page = paginate(packages, size, page, total_pages)
+    packages_per_page = paginate(packages, page, size, total_pages)
     parsed_packages = []
     for package in packages_per_page:
         parsed_packages.append(
@@ -162,7 +157,7 @@ def filter_packages(
     return result
 
 
-def format_category_name(slug):
+def format_slug(slug):
     """Format category name into a standard title format
 
     :param slug: The hypen spaced, lowercase slug to be formatted
@@ -189,7 +184,7 @@ def parse_categories(
     if "categories" in categories_json:
         for category in categories_json["categories"]:
             categories.append(
-                {"slug": category, "name": format_category_name(category)}
+                {"slug": category, "name": format_slug(category)}
             )
 
     return categories
@@ -206,6 +201,7 @@ def get_store_categories(store_api) -> List[Dict[str, str]]:
         all_categories = []
 
     return all_categories
+
 
 def get_snaps_account_info(account_info):
     """Get snaps from the account information of a user
