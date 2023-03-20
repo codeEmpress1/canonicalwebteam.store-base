@@ -10,7 +10,7 @@ def login_required(f):
     def decorated_function(*args, **kwargs):
         if not is_authenticated(flask.session):
             return flask.redirect(
-                flask.url_for("login.candid_login", next=flask.request.path)
+                flask.url_for("auth.login", next=flask.request.path)
             )
         return f(*args, **kwargs)
 

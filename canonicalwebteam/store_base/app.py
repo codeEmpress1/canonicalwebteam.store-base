@@ -8,11 +8,11 @@ each store blueprint to make a complete application
 from flask import session, make_response
 from canonicalwebteam.flask_base.app import FlaskBase
 import canonicalwebteam.store_base.utils.config as config
+from canonicalwebteam.store_base.auth.views import auth
+from canonicalwebteam.store_base.store.views import store
 from canonicalwebteam.store_base.utils.extensions import csrf
-from canonicalwebteam.store_base.packages.views import package
-from canonicalwebteam.store_base.sample_blueprint.views import sample_bp
 from canonicalwebteam.store_base.handlers import set_handlers
-# from canonicalwebteam.store_base.auth.login.views import login
+from canonicalwebteam.store_base.sample_blueprint.views import sample_bp
 
 
 def create_app(
@@ -22,7 +22,9 @@ def create_app(
     app = FlaskBase(__name__, app_name)
 
     app.register_blueprint(store_bp)
-    app.register_blueprint(package)
+    app.register_blueprint(store)
+    app.register_blueprint(auth)
+
     app.config.from_object(config)
     app.testing = testing
 

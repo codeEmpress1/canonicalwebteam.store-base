@@ -1,4 +1,3 @@
-from pprint import pprint
 import unittest
 from tests.mock_data import (
     sample_snap,
@@ -6,7 +5,7 @@ from tests.mock_data import (
     sample_package_list,
     sample_package_list2,
 )
-from canonicalwebteam.store_base.packages.logic import (
+from canonicalwebteam.store_base.store.logic import (
     filter_packages,
     parse_package_for_card,
     paginate,

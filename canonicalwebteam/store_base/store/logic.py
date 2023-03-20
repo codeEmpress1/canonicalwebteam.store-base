@@ -68,16 +68,15 @@ def parse_package_for_card(package: Dict[str, Any], package_type) -> Package:
     if package_type == "charm" or package_type == "bundle":
         result = package.get("result", {})
         publisher = result.get("publisher", {})
-        store_front = package.get("store_front", {})
         
         resp["package"]["type"] = package.get("type", "")
         resp["package"]["name"] = package.get("name", "")
         resp["package"]["description"] = result.get("summary", "")
-        resp["package"]["display_name"] = store_front.get("display_name", "")
-        resp["package"]["platforms"] = store_front.get("deployable-on", [])
+        resp["package"]["display_name"] = format_slug(result.get("display_name", ""))
+        resp["package"]["platforms"] = result.get("deployable-on", [])
         resp["publisher"]["display_name"] = publisher.get("display-name", "")
         resp["publisher"]["validation"] = publisher.get("validation", "")
-        resp["categories"] = store_front.get("categories", [])
+        resp["categories"] = result.get("categories", [])
         resp["package"]["icon_url"] = helpers.get_icon(result.get("media", []))
 
     return resp
@@ -158,7 +157,7 @@ def filter_packages(
     return result
 
 
-def format_category_name(slug):
+def format_slug(slug):
     """Format category name into a standard title format
 
     :param slug: The hypen spaced, lowercase slug to be formatted
@@ -185,7 +184,7 @@ def parse_categories(
     if "categories" in categories_json:
         for category in categories_json["categories"]:
             categories.append(
-                {"slug": category, "name": format_category_name(category)}
+                {"slug": category, "name": format_slug(category)}
             )
 
     return categories

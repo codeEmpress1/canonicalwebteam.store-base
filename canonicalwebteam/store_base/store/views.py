@@ -2,19 +2,19 @@ import talisker
 import flask
 from flask import Blueprint, request, session, make_response, current_app as app
 
-from canonicalwebteam.store_base.packages.logic import get_packages, get_snaps_account_info
+from canonicalwebteam.store_base.store.logic import get_packages, get_snaps_account_info
 from canonicalwebteam.store_base.utils.config import PACKAGE_PARAMS
 
 from canonicalwebteam.store_base.utils.decorators import login_required
 
-package = Blueprint(
-    "package",
+store = Blueprint(
+    "store",
     __name__,
 )
 
 
-@package.route("/store")
-def store():
+@store.route("/store")
+def store_packages():
     app_name = app.name
     params = PACKAGE_PARAMS[app_name]
     store, fields, size = params["store"], params["fields"], params["size"]
@@ -22,7 +22,7 @@ def store():
     return get_packages(store, fields, size, page)
 
 
-@package.route("/<package_type>")
+@store.route("/<package_type>")
 @login_required
 def package_type(package_type):
     app_name = app.name
