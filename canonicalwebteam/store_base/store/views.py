@@ -41,7 +41,9 @@ def package_type(package_type):
             "published_packages": [
                 package
                 for package in publisher_packages
-                if package["status"] == "published" and f"{package['type']}s" == page_type
+
+                if package["status"] == "published" and package['type'] == page_type
+
             ],
             "registered_packages": [
                 package
