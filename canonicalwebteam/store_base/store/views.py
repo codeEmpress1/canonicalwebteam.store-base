@@ -35,7 +35,7 @@ def package_type(package_type):
         publisher_packages = publisher_api.get_account_packages(
             session["account-auth"], "charm", include_collaborations=True
         )
-        page_type = request.path[1:1]
+        page_type = request.path[1:-1]
 
         response = make_response({
             "published_packages": [
@@ -46,7 +46,7 @@ def package_type(package_type):
             "registered_packages": [
                 package
                 for package in publisher_packages
-                if package["status"] == "registered" and f"{package['type']}s" == page_type
+                if package["status"] == "registered" and package['type'] == page_type
             ],
             "page_type": page_type,
         })
