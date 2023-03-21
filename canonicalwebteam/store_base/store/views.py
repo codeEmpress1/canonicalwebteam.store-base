@@ -30,7 +30,8 @@ def package_type(package_type):
     
     publisher_api = publisher(talisker.requests.get_session())
     # this endpoint needs to be made generic in the future, so we wont have to check for package_type
-    if package_type == "charms" or "bundles":
+
+    if app_name.startswith("charmhub"):
         publisher_packages = publisher_api.get_account_packages(
             session["account-auth"], "charm", include_collaborations=True
         )
@@ -40,18 +41,18 @@ def package_type(package_type):
             "published_packages": [
                 package
                 for package in publisher_packages
-                if package["status"] == "published" and package["type"] == page_type
+                if package["status"] == "published" and f"{package['type']}s" == page_type
             ],
             "registered_packages": [
                 package
                 for package in publisher_packages
-                if package["status"] == "registered" and package["type"] == page_type
+                if package["status"] == "registered" and f"{package['type']}s" == page_type
             ],
             "page_type": page_type,
         })
         return response
 
-    if package_type == "snaps":
+    if app_name.startswith("snapcraft"):
         account_info = publisher_api.get_account(flask.session)
 
         user_snaps, registered_snaps = get_snaps_account_info(account_info)
