@@ -46,6 +46,8 @@ def parse_package_for_card(package: Dict[str, Any], package_type) -> Package:
         },
         "publisher": {"display_name": "", "name": "", "validation": ""},
         "categories": [],
+        # hardcoded temporarily until we have this data from the API
+        "ratings": {"value": "0", "count": "0"},
     }
 
     if package_type == "snap":
