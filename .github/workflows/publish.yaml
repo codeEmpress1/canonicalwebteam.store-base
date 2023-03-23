@@ -11,13 +11,16 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - uses: snok/install-poetry@v1.3.0
 
-    - name: Install system dependencies
-      run: |
-        pip3 install --upgrade setuptools pip
-        pip3 install wheel
+    - name: Install dependencies
+      run: sudo apt update && sudo apt install -y --no-install-recommends python3-venv
+
+    - name: Make poetry use Python 3
+      run: sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 10
+
     - name: Build package
-      run: python3 setup.py sdist bdist_wheel
+      run: poetry build
 
     - name: Publish to PyPI
       uses: pypa/gh-action-pypi-publish@bea5cda687c2b79989126d589ef4411bedce0195
