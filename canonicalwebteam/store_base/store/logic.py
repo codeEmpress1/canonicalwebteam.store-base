@@ -1,4 +1,5 @@
 import datetime
+
 import talisker
 from flask import make_response
 from typing import List, Dict, TypedDict, Any
@@ -85,6 +86,20 @@ def parse_package_for_card(package: Dict[str, Any]) -> Package:
         resp["package"]["icon_url"] = helpers.get_icon(
             package["snap"]["media"]
         )
+
+    if package_type == "charm" or package_type == "bundle":
+        result = package.get("result", {})
+        publisher = result.get("publisher", {})
+        
+        resp["package"]["type"] = package.get("type", "")
+        resp["package"]["name"] = package.get("name", "")
+        resp["package"]["description"] = result.get("summary", "")
+        resp["package"]["display_name"] = result.get("title", format_slug(package.get("name", "")))
+        resp["package"]["platforms"] = result.get("deployable-on", [])
+        resp["publisher"]["display_name"] = publisher.get("display-name", "")
+        resp["publisher"]["validation"] = publisher.get("validation", "")
+        resp["categories"] = result.get("categories", [])
+        resp["package"]["icon_url"] = helpers.get_icon(result.get("media", []))
 
     return resp
 
