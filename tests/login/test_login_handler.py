@@ -1,7 +1,10 @@
-from flask_testing import TestCase
-import responses
+import os
+
 import requests
+import responses
+from flask_testing import TestCase
 from pymacaroons import Macaroon
+
 from canonicalwebteam.store_base.app import create_app
 
 
@@ -11,11 +14,11 @@ class LoginTest(TestCase):
 
     def setup(self, api_url):
         self.endpoint_url = "/login"
-        self.api_url = api_url
+        self.api_url = "http://localhost:5000/api/login"
 
     def create_app(self):
-        app = create_app(testing=True)
-        app.secret_key = "secret_key"
+        os.environ["SECRET_KEY"] = "secret_key"
+        app = create_app(app_name="test-app", testing=True)
         app.config["WTF_CSRF_METHODS"] = []
 
         return app
