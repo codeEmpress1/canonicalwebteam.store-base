@@ -29,9 +29,11 @@ class TestStoreEndpoint(TestCase):
                 "?",
                 urlencode(
                     {
-                        "fields": "result.categories, result.summary,"
-                        "result.media, result.title, result.publisher.display-name,"
-                        "default-release.revision.revision, default-release.channel,"
+                        "fields": "result.categories, result.summary, "
+                        "result.media, result.title, "
+                        "result.publisher.display-name,"
+                        "default-release.revision.revision, "
+                        "default-release.channel,"
                         "result.deployable-on"
                     }
                 ),
@@ -43,7 +45,6 @@ class TestStoreEndpoint(TestCase):
 
 class TestStoreEndpointWithCharmhub(TestStoreEndpoint):
     def create_app(self):
-
         app = create_app("charmhub_beta", testing=True)
         app.secret_key = "secret-keyxyzqwertehgfs"
         app.config["WTF_CSRF_METHODS"] = []
@@ -52,7 +53,6 @@ class TestStoreEndpointWithCharmhub(TestStoreEndpoint):
 
     @responses.activate
     def test_store_endpoint_with_charmhub(self):
-
         responses.add(
             responses.Response(
                 method="GET",
@@ -69,7 +69,6 @@ class TestStoreEndpointWithCharmhub(TestStoreEndpoint):
 
 class TestStoreEndpointWithSnapcraft(TestStoreEndpoint):
     def create_app(self):
-
         app = create_app("snapcraft_beta", testing=True)
         app.secret_key = "secret-keyxyzqwertehgfs"
         app.config["WTF_CSRF_METHODS"] = []
@@ -77,7 +76,6 @@ class TestStoreEndpointWithSnapcraft(TestStoreEndpoint):
         return app
 
     def test_store_endpoint_with_charmhub(self):
-
         responses.add(
             responses.Response(
                 method="GET",

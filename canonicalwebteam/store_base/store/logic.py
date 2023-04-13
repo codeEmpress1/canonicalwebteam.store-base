@@ -1,6 +1,6 @@
 import datetime
 import talisker
-from flask import session, request, make_response
+from flask import make_response
 from typing import List, Dict, TypedDict, Any
 
 from canonicalwebteam.store_api.exceptions import StoreApiError
@@ -58,7 +58,8 @@ def parse_package_for_card(package: Dict[str, Any], package_type) -> Package:
         resp["package"]["type"] = "snap"
         resp["package"]["name"] = package.get("name", "")
         # platform to be fetched
-        # resp["package"]["platforms"] = package["store_front"]["deployable-on"]
+        # resp["package"]["platforms"] =
+        # package["store_front"]["deployable-on"]
         resp["publisher"]["display_name"] = publisher.get("display-name", "")
         resp["publisher"]["name"] = publisher.get("username", "")
         resp["publisher"]["validation"] = publisher.get("validation", "")
@@ -70,11 +71,13 @@ def parse_package_for_card(package: Dict[str, Any], package_type) -> Package:
     if package_type == "charm" or package_type == "bundle":
         result = package.get("result", {})
         publisher = result.get("publisher", {})
-        
+
         resp["package"]["type"] = package.get("type", "")
         resp["package"]["name"] = package.get("name", "")
         resp["package"]["description"] = result.get("summary", "")
-        resp["package"]["display_name"] = format_slug(result.get("display_name", ""))
+        resp["package"]["display_name"] = format_slug(
+            result.get("display_name", "")
+        )
         resp["package"]["platforms"] = result.get("deployable-on", [])
         resp["publisher"]["display_name"] = publisher.get("display-name", "")
         resp["publisher"]["validation"] = publisher.get("validation", "")
@@ -87,7 +90,6 @@ def parse_package_for_card(package: Dict[str, Any], package_type) -> Package:
 def paginate(
     packages: List[Package], page: int, size: int, total_pages: int
 ) -> List[Package]:
-    
     if page > total_pages:
         page = total_pages
     if page < 1:
@@ -126,7 +128,7 @@ def filter_packages(
 ):
     result = packages
     for key, val in filter_params.items():
-        if key == "categories" and not "all" in val:
+        if key == "categories" and "all" not in val:
             result = list(
                 filter(
                     lambda package: len(
@@ -140,7 +142,7 @@ def filter_packages(
                     result,
                 )
             )
-        if (key == "platforms" or key == "architectures") and not "all" in val:
+        if (key == "platforms" or key == "architectures") and "all" not in val:
             result = list(
                 filter(
                     lambda package: len(
@@ -151,7 +153,7 @@ def filter_packages(
                 )
             )
 
-        if key == "type" and not "all" in val:
+        if key == "type" and "all" not in val:
             result = list(
                 filter(lambda package: package["package_type"] in val, result)
             )
@@ -178,7 +180,8 @@ def parse_categories(
 ) -> List[Dict[str, str]]:
     """
     :param categories_json: The returned json from store_api.get_categories()
-    :returns: A list of categories in the format: [{"name": "Category", "slug": "category"}]
+    :returns: A list of categories in the format:
+        [{"name": "Category", "slug": "category"}]
     """
 
     categories = []

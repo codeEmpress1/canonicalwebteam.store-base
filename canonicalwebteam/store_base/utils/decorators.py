@@ -1,9 +1,9 @@
-import os
 import functools
-from distutils.util import strtobool
 
 import flask
+
 from canonicalwebteam.store_base.auth.authentication import is_authenticated
+
 
 def login_required(f):
     @functools.wraps(f)
@@ -15,4 +15,3 @@ def login_required(f):
         return f(*args, **kwargs)
 
     return decorated_function
-

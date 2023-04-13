@@ -12,7 +12,7 @@ class LoginTest(TestCase):
     def setup(self, api_url):
         self.endpoint_url = "/login"
         self.api_url = api_url
-        
+
     def create_app(self):
         app = create_app(testing=True)
         app.secret_key = "secret_key"
