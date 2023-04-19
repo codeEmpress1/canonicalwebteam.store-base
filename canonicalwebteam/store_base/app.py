@@ -18,7 +18,6 @@ from canonicalwebteam.store_base.sample_blueprint.views import sample_bp
 def create_app(
     app_name, store_bp=sample_bp, utility_processor=None, testing=False
 ):
-
     app = FlaskBase(__name__, app_name)
 
     app.register_blueprint(store_bp)
