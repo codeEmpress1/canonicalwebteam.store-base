@@ -46,7 +46,18 @@ legacy_tox_ini = """
         type
 
     [testenv:lint]
-    deps = mypy
+    deps = 
+        mypy
+        isort
+        black
+        flake8-docstrings
+        flake8-docstrings-complete
+        flake8-builtins
+        flake8-test-docs
+        pep8-naming
+        codespell
+        pylint
+        pydocstyle
     commands = mypy src
 """
 

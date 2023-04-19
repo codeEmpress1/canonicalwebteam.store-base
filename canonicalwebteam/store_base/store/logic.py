@@ -30,11 +30,13 @@ def fetch_packages(store_api, fields: List[str]):
     return response.json
 
 
-def parse_package_for_card(package: Dict[str, Any], package_type) -> Package:
+def parse_package_for_card(package: Dict[str, Any]) -> Package:
     """
     Takes a package (snap, charm or bundle) as input
     Returns the formatted package based on the given card schema
     """
+
+    package_type = package.get("type", "")
     resp = {
         "package": {
             "description": "",
@@ -50,7 +52,23 @@ def parse_package_for_card(package: Dict[str, Any], package_type) -> Package:
         "ratings": {"value": "0", "count": "0"},
     }
 
-    if package_type == "snap":
+    if package_type == "charm" or package_type == "bundle":
+        result = package.get("result", {})
+        publisher = result.get("publisher", {})
+
+        resp["package"]["type"] = package.get("type", "")
+        resp["package"]["name"] = package.get("name", "")
+        resp["package"]["description"] = result.get("summary", "")
+        resp["package"]["display_name"] = result.get(
+            "title", format_slug(package.get("name", ""))
+        )
+        resp["package"]["platforms"] = result.get("deployable-on", [])
+        resp["publisher"]["display_name"] = publisher.get("display-name", "")
+        resp["publisher"]["validation"] = publisher.get("validation", "")
+        resp["categories"] = result.get("categories", [])
+        resp["package"]["icon_url"] = helpers.get_icon(result.get("media", []))
+
+    else:
         snap = package.get("snap", {})
         publisher = snap.get("publisher", {})
         resp["package"]["description"] = snap.get("summary", "")
@@ -67,22 +85,6 @@ def parse_package_for_card(package: Dict[str, Any], package_type) -> Package:
         resp["package"]["icon_url"] = helpers.get_icon(
             package["snap"]["media"]
         )
-
-    if package_type == "charm" or package_type == "bundle":
-        result = package.get("result", {})
-        publisher = result.get("publisher", {})
-
-        resp["package"]["type"] = package.get("type", "")
-        resp["package"]["name"] = package.get("name", "")
-        resp["package"]["description"] = result.get("summary", "")
-        resp["package"]["display_name"] = format_slug(
-            result.get("display_name", "")
-        )
-        resp["package"]["platforms"] = result.get("deployable-on", [])
-        resp["publisher"]["display_name"] = publisher.get("display-name", "")
-        resp["publisher"]["validation"] = publisher.get("validation", "")
-        resp["categories"] = result.get("categories", [])
-        resp["package"]["icon_url"] = helpers.get_icon(result.get("media", []))
 
     return resp
 
@@ -116,9 +118,7 @@ def get_packages(
     packages_per_page = paginate(packages, page, size, total_pages)
     parsed_packages = []
     for package in packages_per_page:
-        parsed_packages.append(
-            parse_package_for_card(package, package["type"])
-        )
+        parsed_packages.append(parse_package_for_card(package))
 
     return {"packages": parsed_packages, "total_pages": total_pages}
 
@@ -155,7 +155,7 @@ def filter_packages(
 
         if key == "type" and "all" not in val:
             result = list(
-                filter(lambda package: package["package_type"] in val, result)
+                filter(lambda package: package["type"] in val, result)
             )
 
     return result

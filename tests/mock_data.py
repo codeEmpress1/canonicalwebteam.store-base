@@ -76,6 +76,7 @@ sample_charm = {
     "id": "someID",
     "name": "A charm name",
     "result": {
+        "title": "A charm title",
         "categories": [
             {
                 "featured": False,
@@ -94,7 +95,6 @@ sample_charm = {
         ],
         "publisher": {"display-name": "Publisher name"},
         "summary": "A charm summary",
-        "title": "",
     },
     "type": "charm",
     "store_front": {
@@ -107,113 +107,116 @@ sample_charm = {
     },
 }
 
-sample_package_list = [
-    {
-        "package": {"name": "test1"},
-        "publisher": {"display-name": "publisher test1"},
-        "categories": [{"name": "cat-1", "display_name": "cat 1"}],
-        "platforms": ["VM", "kubernetes"],
-        "package_type": "charm",
-    },
-    {
-        "package": {"name": "test2"},
-        "publisher": {"display-name": "publisher test2"},
-        "categories": [{"name": "cat-2", "display_name": "cat 2"}],
-        "platforms": ["VM"],
-        "package_type": "charm",
-    },
-    {
-        "package": {"name": "test9"},
-        "publisher": {"display-name": "publisher test9"},
-        "categories": [{"name": "cat-2", "display_name": "cat 2"}],
-        "platforms": ["VM"],
-        "package_type": "charm",
-    },
-    {
-        "package": {"name": "test14"},
-        "publisher": {"display-name": "publisher test14"},
-        "categories": [{"name": "cat-1", "display_name": "cat 1"}],
-        "platforms": ["kubernetes"],
-        "package_type": "charm",
-    },
-    {
-        "package": {"name": "test11"},
-        "publisher": {"display-name": "publisher test11"},
-        "categories": [{"name": "cat-3", "display_name": "test cat 3"}],
-        "platforms": ["kubernetes"],
-        "package_type": "charm",
-    },
-    {
-        "package": {"name": "test3"},
-        "publisher": {"display-name": "publisher test3"},
-        "categories": [{"name": "cat-3", "display_name": "cat 3"}],
-        "platforms": ["VM"],
-        "package_type": "bundle",
-    },
-    {
-        "package": {"name": "test4"},
-        "publisher": {"display-name": "publisher test4"},
-        "categories": [{"name": "cat-3", "display_name": "cat 3"}],
-        "platforms": ["kubernetes"],
-        "package_type": "bundle",
-    },
-    {
-        "package": {"name": "test10"},
-        "publisher": {"display-name": "publisher test10"},
-        "categories": [{"name": "cat-3", "display_name": "test cat 3"}],
-        "platforms": ["kubernetes", "VM"],
-        "package_type": "bundle",
-    },
-    {
-        "package": {"name": "test12"},
-        "publisher": {"display-name": "publisher test12"},
-        "categories": [{"name": "cat-3", "display_name": "test cat 12"}],
-        "platforms": ["VM"],
-        "package_type": "bundle",
-    },
-    {
-        "package": {"name": "test13"},
-        "publisher": {"display-name": "publisher test13"},
-        "categories": [{"name": "cat-1", "display_name": "cat 1"}],
-        "platforms": ["VM"],
-        "package_type": "bundle",
-    },
-]
-
-sample_package_list2 = [
-    {
-        "package": {"name": "test15"},
-        "publisher": {"display-name": "publisher test15"},
-        "categories": [{"name": "cat-1", "display_name": "cat 1"}],
-        "platforms": ["arch3"],
-        "package_type": "snap",
-    },
-    {
-        "package": {"name": "test5"},
-        "publisher": {"display-name": "publisher test5"},
-        "categories": [{"name": "cat-3", "display_name": "cat 3"}],
-        "platforms": ["arch1"],
-        "package_type": "snap",
-    },
-    {
-        "package": {"name": "test6"},
-        "publisher": {"display-name": "publisher test6"},
-        "categories": [{"name": "cat-2", "display_name": "cat 2"}],
-        "platforms": ["arch1"],
-        "package_type": "snap",
-    },
-    {
-        "package": {"name": "test7"},
-        "publisher": {"display-name": "publisher test7"},
-        "categories": [{"name": "cat-2", "display_name": "cat 2"}],
-        "platforms": ["arch1", "arch2"],
-        "package_type": "snap",
-    },
-    {
-        "package": {"name": "test8"},
-        "publisher": {"display-name": "publisher test8"},
-        "categories": [{"name": "cat-2", "display_name": "cat 2"}],
-        "platforms": ["arch2"],
-        "package_type": "snap",
-    },
-]
+sample_package_list = {
+    "results": [
+        {
+            "package": {"name": "test1"},
+            "publisher": {"display-name": "publisher test1"},
+            "categories": [{"name": "cat-1", "display_name": "cat 1"}],
+            "platforms": ["VM", "kubernetes"],
+            "type": "charm",
+        },
+        {
+            "package": {"name": "test2"},
+            "publisher": {"display-name": "publisher test2"},
+            "categories": [{"name": "cat-2", "display_name": "cat 2"}],
+            "platforms": ["VM"],
+            "type": "charm",
+        },
+        {
+            "package": {"name": "test9"},
+            "publisher": {"display-name": "publisher test9"},
+            "categories": [{"name": "cat-2", "display_name": "cat 2"}],
+            "platforms": ["VM"],
+            "type": "charm",
+        },
+        {
+            "package": {"name": "test14"},
+            "publisher": {"display-name": "publisher test14"},
+            "categories": [{"name": "cat-1", "display_name": "cat 1"}],
+            "platforms": ["kubernetes"],
+            "type": "charm",
+        },
+        {
+            "package": {"name": "test11"},
+            "publisher": {"display-name": "publisher test11"},
+            "categories": [{"name": "cat-3", "display_name": "test cat 3"}],
+            "platforms": ["kubernetes"],
+            "type": "charm",
+        },
+        {
+            "package": {"name": "test3"},
+            "publisher": {"display-name": "publisher test3"},
+            "categories": [{"name": "cat-3", "display_name": "cat 3"}],
+            "platforms": ["VM"],
+            "type": "bundle",
+        },
+        {
+            "package": {"name": "test4"},
+            "publisher": {"display-name": "publisher test4"},
+            "categories": [{"name": "cat-3", "display_name": "cat 3"}],
+            "platforms": ["kubernetes"],
+            "type": "bundle",
+        },
+        {
+            "package": {"name": "test10"},
+            "publisher": {"display-name": "publisher test10"},
+            "categories": [{"name": "cat-3", "display_name": "test cat 3"}],
+            "platforms": ["kubernetes", "VM"],
+            "type": "bundle",
+        },
+        {
+            "package": {"name": "test12"},
+            "publisher": {"display-name": "publisher test12"},
+            "categories": [{"name": "cat-3", "display_name": "test cat 12"}],
+            "platforms": ["VM"],
+            "type": "bundle",
+        },
+        {
+            "package": {"name": "test13"},
+            "publisher": {"display-name": "publisher test13"},
+            "categories": [{"name": "cat-1", "display_name": "cat 1"}],
+            "platforms": ["VM"],
+            "type": "bundle",
+        },
+    ]
+}
+sample_package_list2 = {
+    "results": [
+        {
+            "package": {"name": "test15"},
+            "publisher": {"display-name": "publisher test15"},
+            "categories": [{"name": "cat-1", "display_name": "cat 1"}],
+            "platforms": ["arch3"],
+            "type": "snap",
+        },
+        {
+            "package": {"name": "test5"},
+            "publisher": {"display-name": "publisher test5"},
+            "categories": [{"name": "cat-3", "display_name": "cat 3"}],
+            "platforms": ["arch1"],
+            "type": "snap",
+        },
+        {
+            "package": {"name": "test6"},
+            "publisher": {"display-name": "publisher test6"},
+            "categories": [{"name": "cat-2", "display_name": "cat 2"}],
+            "platforms": ["arch1"],
+            "type": "snap",
+        },
+        {
+            "package": {"name": "test7"},
+            "publisher": {"display-name": "publisher test7"},
+            "categories": [{"name": "cat-2", "display_name": "cat 2"}],
+            "platforms": ["arch1", "arch2"],
+            "type": "snap",
+        },
+        {
+            "package": {"name": "test8"},
+            "publisher": {"display-name": "publisher test8"},
+            "categories": [{"name": "cat-2", "display_name": "cat 2"}],
+            "platforms": ["arch2"],
+            "type": "snap",
+        },
+    ]
+}
