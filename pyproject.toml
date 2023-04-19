@@ -24,42 +24,17 @@ pymacaroons = "^0.13.0"
 pipenv = "^2022.12.19"
 python-dotenv = "^0.20.0"
 slugify = "^0.0.1"
-pytest = "^7.2.2"
 responses = "^0.22.0"
-flask-testing = "^0.8.1"
 talisker = "^0.21.3"
-black = "^22.12.0"
-tox = "^4.4.11"
+
 
 [tool.poetry.group.dev.dependencies]
 Flask-Testing = "^0.8.1"
 freezegun = "^0.3.4"
+pytest = "^7.2.2"
+tox = "^4.4.11"
+black = "^22.12.0"
 
-[tool.tox]
-legacy_tox_ini = """
-    [tox]
-    min_version = 4.0
-    env_list =
-        py310
-        py39
-        py38
-        type
-
-    [testenv:lint]
-    deps = 
-        mypy
-        isort
-        black
-        flake8-docstrings
-        flake8-docstrings-complete
-        flake8-builtins
-        flake8-test-docs
-        pep8-naming
-        codespell
-        pylint
-        pydocstyle
-    commands = mypy src
-"""
 
 [build-system]
 requires = ["poetry-core"]
