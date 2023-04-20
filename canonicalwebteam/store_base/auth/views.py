@@ -17,6 +17,7 @@ from canonicalwebteam.store_base.auth.authentication import (
     is_authenticated,
 )
 from canonicalwebteam.store_base.auth.logic import get_macaroon_response
+from canonicalwebteam.store_base.utils.helpers import is_safe_url
 
 # Login blueprint should be passed in at store level for now
 auth = Blueprint("auth", __name__)
