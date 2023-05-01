@@ -1,5 +1,8 @@
 {
     "python.analysis.extraPaths": [
         "./venv/lib/python3.8/site-packages"
-    ]
+    ],
+    "python.formatting.provider": "black",
+    "editor.formatOnSave": true,
+
 }

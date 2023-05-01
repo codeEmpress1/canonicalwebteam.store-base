@@ -1,4 +1,5 @@
 import datetime
+
 import talisker
 from flask import make_response
 from typing import List, Dict, TypedDict, Any
@@ -76,8 +77,6 @@ def parse_package_for_card(package: Dict[str, Any]) -> Package:
         resp["package"]["type"] = "snap"
         resp["package"]["name"] = package.get("name", "")
         # platform to be fetched
-        # resp["package"]["platforms"] =
-        # package["store_front"]["deployable-on"]
         resp["publisher"]["display_name"] = publisher.get("display-name", "")
         resp["publisher"]["name"] = publisher.get("username", "")
         resp["publisher"]["validation"] = publisher.get("validation", "")
@@ -181,7 +180,7 @@ def parse_categories(
     """
     :param categories_json: The returned json from store_api.get_categories()
     :returns: A list of categories in the format:
-        [{"name": "Category", "slug": "category"}]
+    [{"name": "Category", "slug": "category"}]
     """
 
     categories = []

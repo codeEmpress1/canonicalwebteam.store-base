@@ -1,8 +1,15 @@
 import talisker
 from canonicalwebteam.candid import CandidClient
-from flask import Blueprint, abort
-from flask import current_app as app
-from flask import make_response, redirect, request, session
+from canonicalwebteam.store_base.utils.config import PACKAGE_PARAMS
+from flask import (
+    Blueprint,
+    session,
+    redirect,
+    request,
+    make_response,
+    abort,
+    current_app as app,
+)
 from flask_wtf.csrf import generate_csrf, validate_csrf
 
 from canonicalwebteam.store_base.auth.authentication import (
@@ -10,7 +17,6 @@ from canonicalwebteam.store_base.auth.authentication import (
     is_authenticated,
 )
 from canonicalwebteam.store_base.auth.logic import get_macaroon_response
-from canonicalwebteam.store_base.utils.config import PACKAGE_PARAMS
 from canonicalwebteam.store_base.utils.helpers import is_safe_url
 
 # Login blueprint should be passed in at store level for now
@@ -23,6 +29,7 @@ candid = CandidClient(request_session)
 @auth.route("/logout")
 def logout():
     empty_session(session)
+    # should redirect to store landing page
     return "user successfully logged out"
 
 

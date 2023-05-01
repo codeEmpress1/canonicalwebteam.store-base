@@ -12,7 +12,7 @@ from canonicalwebteam.store_api.stores.snapstore import (
 ENVIRONMENT = os.getenv("ENVIRONMENT", "devel")
 SECRET_KEY = os.getenv("SECRET_KEY", "secret-key")
 
-# we want to ensure this matches the app name for each store for now
+# we want to ensure the keys matches the app name for each store for now
 PACKAGE_PARAMS = {
     "snapcraft_beta": {
         "store": SnapStore,

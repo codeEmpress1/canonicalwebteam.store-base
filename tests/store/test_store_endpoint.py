@@ -15,10 +15,7 @@ class TestStoreEndpoint(unittest.TestCase):
                 "snaps/find",
                 "?",
                 urlencode(
-                    {
-                        "fields": "title,summary,media,publisher,"
-                        "categories",
-                    }
+                    {"fields": "title,summary,media,publisher," "categories"}
                 ),
             ]
         )
