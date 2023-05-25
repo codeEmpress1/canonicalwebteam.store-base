@@ -1,6 +1,6 @@
 import datetime
 import sys
-from importlib_metadata import version
+# from importlib_metadata import version
 
 # Configuration file for the Sphinx documentation builder.
 #
@@ -13,8 +13,8 @@ from importlib_metadata import version
 project = "Store base"
 author = "Canonical Webteam"
 copyright = "%s, %s" % (datetime.date.today().year, author)
-current_version = version("canonicalwebteam.store-base")
-release = current_version
+# current_version = version("canonicalwebteam.store-base")
+release = '1.0'
 
 # Open Graph configuration - defines what is displayed in the website preview
 # ogp_site_url = "https://canonical-starter-pack.readthedocs-hosted.com/"

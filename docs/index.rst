@@ -1,28 +1,15 @@
-:relatedlinks: [Diátaxis](https://diataxis.fr/)
+.. :relatedlinks: [Diátaxis](https://diataxis.fr/)
 
 .. _home:
 
-Starter pack
+Store Base
 ============
 
-**A single sentence that says what the product is, succinctly and memorably.**
-consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-dolore magna aliqua.
+This is the base application that serves as a building block for all stores. It is available as a module on PyPI, and is installed in the virtual environment of each store.
 
-**A paragraph of one to three short sentences, that describe what the product
-does.** Urna cursus eget nunc scelerisque viverra mauris in. Nibh mauris
-cursus mattis molestie a iaculis at vestibulum rhoncus est pellentesque
-elit. Diam phasellus vestibulum lorem sed.
+Store-base is a flask application that allows common configurations, dependencies, views and methods to be shared across all webteam's stores. It provides a common structure for all stores which enhances uniformity, scalabilty and maintainability of stores. It also allows easy creation of new stores and faster update of existing stores. Each store is a separate Flask app that inherits from this base app. 
 
-**A third paragraph of similar length, this time explaining what need the
-product meets.** Dui ut ornare lectus sit amet est. Nunc sed augue lacus
-viverra vitae congue eu consequat ac libero id faucibus nisl tincidunt eget
-nullam.
-
-**Finally, a paragraph that describes whom the product is useful for.** Nunc
-non blandit massa enim nec dui nunc mattis enim. Ornare arcu odio ut sem
-nulla pharetra diam porttitor leo a diam sollicitudin tempor id eu. Ipsum
-dolor sit amet consectetur adipiscing elit pellentesque habitant.
+Individual stores are registered as blueprints  after initialization of the base app. After which store-specific configurations are defined. 
 
 ---------
 
@@ -33,7 +20,7 @@ In this documentation
 
    ..  grid-item:: :doc:`Tutorial <tutorial/index>`
 
-       **Start here**: a hands-on introduction to Example Product for new users
+       **Start here**: a hands-on introduction to Store-base
 
    ..  grid-item:: :doc:`How-to guides <how-to/index>`
 
@@ -55,14 +42,14 @@ In this documentation
 Project and community
 ---------------------
 
-Example Project is a member of the Ubuntu family. It’s an open source project that warmly welcomes community projects, contributions, suggestions, fixes and constructive feedback.
+Store base is a developed and maintained by Canonical webteam. It’s an open source project that warmly welcomes community projects, contributions, suggestions, fixes and constructive feedback.
 
-* :ref:`Code of conduct <home>`
-* :ref:`Get support <home>`
-* :ref:`Join our online chat <home>`
-* :ref:`Contribute <home>`
-* :ref:`Roadmap <home>`
-* :ref:`Thinking about using Example Product for your next project? Get in touch! <home>`
+.. * :ref:`Code of conduct <home>`
+.. * :ref:`Get support <home>`
+.. * :ref:`Join our online chat <home>`
+.. * :ref:`Contribute <home>`
+.. * :ref:`Roadmap <home>`
+.. * :ref:`Thinking about using Example Product for your next project? Get in touch! <home>`
 
 
 .. toctree::
@@ -70,7 +57,5 @@ Example Project is a member of the Ubuntu family. It’s an open source project 
    :maxdepth: 2
 
    tutorial/index
-   how-to/index
    reference/index
-   explanation/index
-   ReadMe <readme>
+   development/index
