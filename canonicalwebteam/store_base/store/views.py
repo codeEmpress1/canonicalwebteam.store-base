@@ -33,7 +33,15 @@ def store_packages():
 
 @store.route("/<package_type>")
 @login_required
-def package_type(package_type):
+def package_type():
+    """
+    Retrieves and returns package information based on the current app
+    and package type.
+
+    :returns: Response: The HTTP response containing the JSON data of the
+    packages.
+    """
+
     app_name = app.name
     publisher = PACKAGE_PARAMS[app_name]["publisher"]
 

@@ -86,6 +86,13 @@ def get_file(filename, replaces={}):
 
 
 def get_licenses():
+    """
+    Retrieves the list of licenses from a JSON file.
+
+    :returns: The list of licenses, where each license is represented as a
+    dictionary with "licenseId" and "name" keys.
+    """
+
     try:
         with open("licenses.json") as f:
             licenses = json.load(f)["licenses"]
@@ -119,6 +126,13 @@ def decrease_header(header, step):
 
 
 def add_header_id(h, levels):
+    """
+    :param h(tag): The HTML header element.
+    :param levels(list): The list of previous header levels and their
+    corresponding IDs.
+
+    :returns: The modified HTML header element with the added ID attribute.
+    """
     id = slugify(h.get_text())
     level = int(h.name[1:])
 
@@ -156,6 +170,9 @@ def modify_headers(soup, decrease_step=2):
 
 def is_safe_url(url):
     """
-    Return True if the URL is inside the same app
+    Check if the URL is safe within the context of the current app.
+
+    :param url(str): The URL to check.
+    :returns: True if the URL is safe, False otherwise.
     """
     return url.startswith(request.url_root) or url.startswith("/")
