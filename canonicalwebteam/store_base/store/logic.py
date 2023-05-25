@@ -24,7 +24,8 @@ def fetch_packages(store_api, fields: List[str]):
     Fetches packages from the store API based on the specified fields.
 
     :param: store_api: The specific store API object.
-    :param: fields (List[str]): A list of fields to include in the package data.
+    :param: fields (List[str]): A list of fields to include in the package
+    data.
 
     :returns: a dictionary containing the list of fetched packages.
 

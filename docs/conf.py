@@ -1,14 +1,6 @@
 import datetime
 import sys
 
-# Configuration file for the Sphinx documentation builder.
-#
-# For the full list of built-in configuration values, see the documentation:
-# https://www.sphinx-doc.org/en/master/usage/configuration.html
-
-# -- Project information -----------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
-
 project = "Store base"
 author = "Canonical Webteam"
 copyright = "%s, %s" % (datetime.date.today().year, author)
@@ -33,9 +25,6 @@ html_context = {
 # Used for related links - no need to change
 if "discourse" in html_context:
     html_context["discourse_prefix"] = html_context["discourse"] + "/t/"
-
-# -- General configuration ---------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
     "sphinx_design",
@@ -62,8 +51,6 @@ source_suffix = {
 # Links to ignore when checking links
 linkcheck_ignore = ["http://127.0.0.1:8000"]
 
-# -- Options for HTML output -------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 # Find the current builder
 builder = "dirhtml"
