@@ -1,6 +1,5 @@
 import datetime
 import sys
-# from importlib_metadata import version
 
 # Configuration file for the Sphinx documentation builder.
 #
@@ -13,8 +12,7 @@ import sys
 project = "Store base"
 author = "Canonical Webteam"
 copyright = "%s, %s" % (datetime.date.today().year, author)
-# current_version = version("canonicalwebteam.store-base")
-release = '1.0'
+release = "0.0.1"
 
 # Open Graph configuration - defines what is displayed in the website preview
 # ogp_site_url = "https://canonical-starter-pack.readthedocs-hosted.com/"
@@ -55,10 +53,6 @@ extensions = [
 myst_enable_extensions = ["substitution", "deflist"]
 
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", ".sphinx"]
-
-rst_epilog = """
-.. include:: /reuse/links.txt
-"""
 
 source_suffix = {
     ".rst": "restructuredtext",

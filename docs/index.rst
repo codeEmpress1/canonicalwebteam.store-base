@@ -7,7 +7,7 @@ Store Base
 
 This is the base application that serves as a building block for all stores. It is available as a module on PyPI, and is installed in the virtual environment of each store.
 
-Store-base is a flask application that allows common configurations, dependencies, views and methods to be shared across all webteam's stores. It provides a common structure for all stores which enhances uniformity, scalabilty and maintainability of stores. It also allows easy creation of new stores and faster update of existing stores. Each store is a separate Flask app that inherits from this base app. 
+Store-base is a flask application that allows common configurations, dependencies, logic and  endpoints to be shared across all webteam's stores. It provides a common structure for all stores which enhances uniformity, scalabilty and maintainability of stores. It also allows easy creation of new stores and faster update of existing stores. Each store is a separate Flask app that inherits from this base app. 
 
 Individual stores are registered as blueprints  after initialization of the base app. After which store-specific configurations are defined. 
 
@@ -18,24 +18,15 @@ In this documentation
 
 ..  grid:: 1 1 2 2
 
-   ..  grid-item:: :doc:`Tutorial <tutorial/index>`
-
-       **Start here**: a hands-on introduction to Store-base
-
-   ..  grid-item:: :doc:`How-to guides <how-to/index>`
+   
+   ..  grid-item:: :doc:`Development <development/index>`
 
       **Step-by-step guides** covering key operations and common tasks
 
-.. grid:: 1 1 2 2
-   :reverse:
+   ..  grid-item:: :doc:`Tutorial <tutorial/index>`
 
-   .. grid-item:: :doc:`Reference <reference/index>`
+       An introduction to Store-base
 
-      **Technical information** - specifications, APIs, architecture
-
-   .. grid-item:: :doc:`Explanation <explanation/index>`
-
-      **Discussion and clarification** of key topics
 
 ---------
 
@@ -56,6 +47,5 @@ Store base is a developed and maintained by Canonical webteam. It’s an open so
    :hidden:
    :maxdepth: 2
 
-   tutorial/index
-   reference/index
    development/index
+   tutorial/index

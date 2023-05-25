@@ -7,8 +7,7 @@ This tutorial will work you through the installation and usage of store base mod
 Core tutorial
 -------------
 
-Follow the core tutorial steps in sequence; they take you on a learning
-journey through the product.
+Follow the core tutorial steps in sequence; it gives you a walk through the module.
 
 .. toctree::
    :maxdepth: 1
