@@ -2,6 +2,9 @@ name: Tests
 
 on: pull_request
 
+env:
+  SECRET_KEY: test_secret_key
+
 jobs:
   build:
     runs-on: ubuntu-latest

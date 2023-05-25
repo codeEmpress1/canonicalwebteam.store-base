@@ -14,8 +14,9 @@ from canonicalwebteam.store_base.store.logic import (
 
 class TestPackages(unittest.TestCase):
     def test_parse_package(self):
-        snap_result = parse_package_for_card(sample_snap, "snap")
-        charm_result = parse_package_for_card(sample_charm, "charm")
+        snap_result = parse_package_for_card(sample_snap)
+        charm_result = parse_package_for_card(sample_charm)
+
         self.assertEqual(
             snap_result["package"]["description"],
             sample_snap["snap"]["summary"],
@@ -31,7 +32,7 @@ class TestPackages(unittest.TestCase):
         )
         self.assertEqual(
             charm_result["package"]["display_name"],
-            sample_charm["store_front"]["display-name"],
+            sample_charm["result"]["title"],
         )
         self.assertEqual(charm_result["package"]["type"], "charm")
 
@@ -41,10 +42,20 @@ class TestPackages(unittest.TestCase):
         total_pages1 = -(len(sample_package_list) // -size1)
         total_pages2 = -(len(sample_package_list) // -size2)
         self.assertEqual(
-            len(paginate(sample_package_list, 1, size1, total_pages1)), 5
+            len(
+                paginate(
+                    sample_package_list["results"], 1, size1, total_pages1
+                )
+            ),
+            5,
         )
         self.assertEqual(
-            len(paginate(sample_package_list, 2, size2, total_pages2)), 3
+            len(
+                paginate(
+                    sample_package_list["results"], 2, size2, total_pages2
+                )
+            ),
+            3,
         )
 
     def test_filter_packages(self):
@@ -75,17 +86,34 @@ class TestPackages(unittest.TestCase):
         }
 
         self.assertEqual(
-            len(filter_packages(sample_package_list, filter_params1)), 10
+            len(
+                filter_packages(sample_package_list["results"], filter_params1)
+            ),
+            10,
         )
         self.assertEqual(
-            len(filter_packages(sample_package_list, filter_params2)), 3
+            len(
+                filter_packages(sample_package_list["results"], filter_params2)
+            ),
+            3,
         )
         self.assertEqual(
-            len(filter_packages(sample_package_list, filter_params3)), 1
+            len(
+                filter_packages(sample_package_list["results"], filter_params3)
+            ),
+            1,
         )
         self.assertEqual(
-            len(filter_packages(sample_package_list, filter_params4)), 2
+            len(
+                filter_packages(sample_package_list["results"], filter_params4)
+            ),
+            2,
         )
         self.assertEqual(
-            len(filter_packages(sample_package_list2, filter_params5)), 2
+            len(
+                filter_packages(
+                    sample_package_list2["results"], filter_params5
+                )
+            ),
+            2,
         )
