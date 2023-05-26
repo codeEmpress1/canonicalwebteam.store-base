@@ -35,6 +35,20 @@ def logout():
 
 @auth.route("/login")
 def login():
+    """
+    Handles the login process for the user.
+
+    Checks if the user is already authenticated
+    Redirects authenticated user to the landing page.
+
+    Sets the account macaroon if not authenticated
+    Generates a callback URL and redirects unauthenticated
+    users to the callback url
+
+
+    Returns:
+        flask.Response: Redirects the user to the login URL.
+    """
     app_name = app.name
     store_publisher = PACKAGE_PARAMS[app_name]["publisher"]
     publisher_api = store_publisher(request_session)
@@ -69,6 +83,19 @@ def login():
 
 @auth.route("/login/callback")
 def login_callback():
+    """
+    Callback function that handles the login redirect.
+
+    Retrieves necessary information from the login request,
+    validates CSRF token, discharges tokens and macaroons,
+    stores bakery authentication, and returns a response with
+    the account authentication token.
+
+    Returns:
+        flask.Response: Response object containing the account
+        authentication token.
+    """
+
     app_name = app.name
     store_publisher = PACKAGE_PARAMS[app_name]["publisher"]
     publisher_api = store_publisher(request_session)

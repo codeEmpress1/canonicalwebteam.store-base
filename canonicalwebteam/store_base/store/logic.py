@@ -21,9 +21,16 @@ Package = TypedDict(
 
 def fetch_packages(store_api, fields: List[str]):
     """
-    Fetch store packages, could be snaps, charms or bundles
-    """
+    Fetches packages from the store API based on the specified fields.
 
+    :param: store_api: The specific store API object.
+    :param: fields (List[str]): A list of fields to include in the package
+    data.
+
+    :returns: a dictionary containing the list of fetched packages.
+
+    note: the response is cached for a maximum age of 3600 seconds.
+    """
     store = store_api(talisker.requests.get_session())
     packages = store.find(fields=fields).get("results", [])
     response = make_response({"packages": packages})
@@ -33,8 +40,16 @@ def fetch_packages(store_api, fields: List[str]):
 
 def parse_package_for_card(package: Dict[str, Any]) -> Package:
     """
-    Takes a package (snap, charm or bundle) as input
-    Returns the formatted package based on the given card schema
+    Parses a package (snap, charm, or bundle) and returns the formatted package
+    based on the given card schema.
+
+    :param: package (Dict[str, Any]): The package to be parsed.
+    :returns: a dictionary containing the formatted package.
+
+    note:
+        - This function has to be refactored to be more generic,
+        so we won't have to check for the package type before parsing.
+
     """
 
     package_type = package.get("type", "")
@@ -91,6 +106,21 @@ def parse_package_for_card(package: Dict[str, Any]) -> Package:
 def paginate(
     packages: List[Package], page: int, size: int, total_pages: int
 ) -> List[Package]:
+    """
+    Paginates a list of packages based on the specified page and size.
+
+    :param: packages (List[Package]): The list of packages to paginate.
+    :param: page (int): The current page number.
+    :param: size (int): The number of packages to include in each page.
+    :param: total_pages (int): The total number of pages.
+    :returns: a list of paginated packages.
+
+    note:
+        - If the provided page exceeds the total number of pages, the last
+        page will be returned.
+        - If the provided page is less than 1, the first page will be returned.
+    """
+
     if page > total_pages:
         page = total_pages
     if page < 1:
@@ -108,8 +138,18 @@ def get_packages(
     store, fields: List[str], size: int = 10, page: int = 1
 ) -> List[Dict[str, Any]]:
     """
-    Returns a list of packages based on the given params
-    Packages returns are paginated and parsed
+    Retrieves a list of packages from the store based on the specified
+    parameters.The returned packages are paginated and parsed using the
+    card schema.
+
+    :param: store: The store object.
+    :param: fields (List[str]): A list of fields to include in the
+            package data.
+    :param: size (int, optional): The number of packages to include
+            in each page. Defaults to 10.
+    :param: page (int, optional): The current page number. Defaults to 1.
+    :returns: a dictionary containing the list of parsed packages and
+            the total pages
     """
 
     packages = fetch_packages(store, fields).get("packages", [])
@@ -125,6 +165,14 @@ def get_packages(
 def filter_packages(
     packages: List[Package], filter_params: Dict[str, List[str]]
 ):
+    """
+    Filters the list of packages based on the specified filter parameters.
+
+    :param packages: the list of packages to filter.
+    :param filter_params: The filter parameters
+    :returns: the filtered list of packages.
+    """
+
     result = packages
     for key, val in filter_params.items():
         if key == "categories" and "all" not in val:
@@ -196,7 +244,11 @@ def parse_categories(
 
 def get_store_categories(store_api) -> List[Dict[str, str]]:
     """
-    Fetch all store categories
+    Fetches all store categories.
+
+    :param: store_api: The store API object used to fetch the categories.
+    :returns: A list of categories in the format:
+    [{"name": "Category", "slug": "category"}]
     """
     store = store_api(talisker.requests.get_session())
     try:
