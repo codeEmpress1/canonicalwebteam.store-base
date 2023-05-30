@@ -7,7 +7,7 @@ Store Base
 
 This is the base application that serves as a building block for all stores. It is available as a module on PyPI, and is installed in the virtual environment of each store.
 
-Store-base is a flask application that allows common configurations, dependencies, logic and  endpoints to be shared across all webteam's stores. It provides a common structure for all stores which enhances uniformity, scalabilty and maintainability of stores. It also allows easy creation of new stores and faster update of existing stores. Each store is a separate Flask app that inherits from this base app. 
+Store-base is a flask application that allows common configurations, dependencies, logic and  endpoints to be shared across all webteam's stores. It provides a common structure for all stores which provides uniformity, scalabilty and maintainability of stores. It also allows easy creation of new stores and faster update of existing stores. Each store is a separate Flask app that inherits from this base app. 
 
 Individual stores are registered as blueprints  after initialization of the base app. After which store-specific configurations are defined. 
 
