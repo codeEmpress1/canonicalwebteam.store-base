@@ -20,4 +20,3 @@ Example::
 
     # all other store blueprints and configurations should be registered here
     # When the store app is run, all endpoints will be available at store-url/endpoint-url
- 

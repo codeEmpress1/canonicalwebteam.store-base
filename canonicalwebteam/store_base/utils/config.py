@@ -26,7 +26,7 @@ PACKAGE_PARAMS = {
         ],
         "size": 15,
     },
-    "charmhub_beta": {
+    "charmhub": {
         "store": CharmStore,
         "publisher": CharmPublisher,
         "fields": [

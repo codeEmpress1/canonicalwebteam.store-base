@@ -8,7 +8,7 @@ from flask import (
     current_app as app,
 )
 
-from canonicalwebteam.store_base.store.logic import (
+from canonicalwebteam.store_base.packages.logic import (
     get_packages,
     get_snaps_account_info,
 )
@@ -16,24 +16,25 @@ from canonicalwebteam.store_base.utils.config import PACKAGE_PARAMS
 
 from canonicalwebteam.store_base.utils.decorators import login_required
 
-store = Blueprint(
-    "store",
+store_packages = Blueprint(
+    "package",
     __name__,
 )
 
 
-@store.route("/store")
-def store_packages():
+@store_packages.route("/store.json")
+def get_store_packages():
     app_name = app.name
     params = PACKAGE_PARAMS[app_name]
     store, fields, size = params["store"], params["fields"], params["size"]
     page = int(request.args.get("page", 1))
-    return get_packages(store, fields, size, page)
+    res = make_response(get_packages(store, fields, size, page))
+    return res
 
 
-@store.route("/<package_type>")
+@store_packages.route("/<any(charms, bundles, snaps):package_type>")
 @login_required
-def package_type():
+def package(package_type):
     """
     Retrieves and returns package information based on the current app
     and package type.

@@ -35,12 +35,6 @@ Project and community
 
 Store base is a developed and maintained by Canonical webteam. It’s an open source project that warmly welcomes community projects, contributions, suggestions, fixes and constructive feedback.
 
-.. * :ref:`Code of conduct <home>`
-.. * :ref:`Get support <home>`
-.. * :ref:`Join our online chat <home>`
-.. * :ref:`Contribute <home>`
-.. * :ref:`Roadmap <home>`
-.. * :ref:`Thinking about using Example Product for your next project? Get in touch! <home>`
 
 
 .. toctree::

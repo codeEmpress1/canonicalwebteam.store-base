@@ -38,15 +38,15 @@ class TestStoreEndpoint(unittest.TestCase):
             ]
         )
 
-        self.endpoint_url = "/store"
+        self.endpoint_url = "/store.json"
 
 
 class TestStoreEndpointWithCharmhub(TestStoreEndpoint):
     @responses.activate
     def test_store_endpoint_with_charmhub(self):
         os.environ["SECRET_KEY"] = "secret_key"
-        app = create_app("charmhub_beta", testing=True)
-        app.name = "charmhub_beta"
+        app = create_app("charmhub", testing=True)
+        app.name = "charmhub"
         app.config["WTF_CSRF_METHODS"] = []
         app.testing = True
         client = app.test_client()

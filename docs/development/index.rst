@@ -20,3 +20,9 @@ To run the linter, run the following command:
 How to Contribute
 -----------------
 To improve this module or report issues, you can visit the `GitHub repository <https://github.com/canonical/canonicalwebteam.store-base>`_.
+
+
+.. toctree::
+    :maxdepth: 1
+
+    endpoints
