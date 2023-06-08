@@ -135,7 +135,7 @@ def paginate(
 
 
 def get_packages(
-    store, fields: List[str], size: int = 10, page: int = 1
+    store, fields: List[str], size: int = 10, page: int = 1, filters: Dict = {}
 ) -> List[Dict[str, Any]]:
     """
     Retrieves a list of packages from the store based on the specified
@@ -148,18 +148,30 @@ def get_packages(
     :param: size (int, optional): The number of packages to include
             in each page. Defaults to 10.
     :param: page (int, optional): The current page number. Defaults to 1.
+    :param: filters (Dict, optional): The filter parameters. Defaults to {}.
     :returns: a dictionary containing the list of parsed packages and
             the total pages
     """
 
     packages = fetch_packages(store, fields).get("packages", [])
     total_pages = -(len(packages) // -size)
-    packages_per_page = paginate(packages, page, size, total_pages)
-    parsed_packages = []
-    for package in packages_per_page:
-        parsed_packages.append(parse_package_for_card(package))
 
-    return {"packages": parsed_packages, "total_pages": total_pages}
+    if filters:
+        parsed_packages = []
+        for package in packages:
+            parsed_packages.append(parse_package_for_card(package))
+        filtered_packages = filter_packages(parsed_packages, filters)
+        res = paginate(
+            filtered_packages, page, size, total_pages
+        )
+    else:
+        packages_per_page = paginate(packages, page, size, total_pages)
+        parsed_packages = []
+        for package in packages_per_page:
+            parsed_packages.append(parse_package_for_card(package))
+        res = parsed_packages
+
+    return {"packages": res, "total_pages": total_pages}
 
 
 def filter_packages(
@@ -190,10 +202,11 @@ def filter_packages(
                 )
             )
         if (key == "platforms" or key == "architectures") and "all" not in val:
+            platform = "platforms" if key == "platforms" else "architectures"
             result = list(
                 filter(
                     lambda package: len(
-                        [p for p in package["platforms"] if p in val]
+                        [p for p in package["package"][platform] if p in val]
                     )
                     != 0,
                     result,
@@ -202,7 +215,9 @@ def filter_packages(
 
         if key == "type" and "all" not in val:
             result = list(
-                filter(lambda package: package["type"] in val, result)
+                filter(
+                    lambda package: package["package"]["type"] in val, result
+                )
             )
 
     return result

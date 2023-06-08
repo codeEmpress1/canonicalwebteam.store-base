@@ -25,10 +25,15 @@ store_packages = Blueprint(
 @store_packages.route("/store.json")
 def get_store_packages():
     app_name = app.name
+
+    filters = dict(request.args)
+    filters.pop("page", {})
     params = PACKAGE_PARAMS[app_name]
     store, fields, size = params["store"], params["fields"], params["size"]
+
     page = int(request.args.get("page", 1))
-    res = make_response(get_packages(store, fields, size, page))
+
+    res = make_response(get_packages(store, fields, size, page, filters))
     return res
 
 
