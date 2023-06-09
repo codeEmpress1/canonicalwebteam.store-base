@@ -33,7 +33,9 @@ def get_store_packages():
 
     page = int(request.args.get("page", 1))
 
-    res = make_response(get_packages(store, fields, size, page, filters))
+    res = make_response(
+        get_packages(store, app_name, fields, size, page, filters)
+    )
     return res
 
 

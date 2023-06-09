@@ -14,8 +14,8 @@ from canonicalwebteam.store_base.packages.logic import (
 
 class TestPackages(unittest.TestCase):
     def test_parse_package(self):
-        snap_result = parse_package_for_card(sample_snap)
-        charm_result = parse_package_for_card(sample_charm)
+        snap_result = parse_package_for_card(sample_snap, "snapcraft")
+        charm_result = parse_package_for_card(sample_charm, "charmhub")
 
         self.assertEqual(
             snap_result["package"]["description"],

@@ -19,7 +19,7 @@ Package = TypedDict(
 )
 
 
-def fetch_packages(store_api, fields: List[str]):
+def fetch_packages(store_api, fields: List[str]) -> Package:
     """
     Fetches packages from the store API based on the specified fields.
 
@@ -38,7 +38,9 @@ def fetch_packages(store_api, fields: List[str]):
     return response.json
 
 
-def parse_package_for_card(package: Dict[str, Any]) -> Package:
+def parse_package_for_card(
+    package: Dict[str, Any], store_name: str
+) -> Package:
     """
     Parses a package (snap, charm, or bundle) and returns the formatted package
     based on the given card schema.
@@ -51,8 +53,6 @@ def parse_package_for_card(package: Dict[str, Any]) -> Package:
         so we won't have to check for the package type before parsing.
 
     """
-
-    package_type = package.get("type", "")
     resp = {
         "package": {
             "description": "",
@@ -68,7 +68,7 @@ def parse_package_for_card(package: Dict[str, Any]) -> Package:
         "ratings": {"value": "0", "count": "0"},
     }
 
-    if package_type == "charm" or package_type == "bundle":
+    if store_name.startswith("charmhub"):
         result = package.get("result", {})
         publisher = result.get("publisher", {})
 
@@ -84,7 +84,8 @@ def parse_package_for_card(package: Dict[str, Any]) -> Package:
         resp["categories"] = result.get("categories", [])
         resp["package"]["icon_url"] = helpers.get_icon(result.get("media", []))
 
-    else:
+    if store_name.startswith("snapcraft"):
+        # pprint({package_type: package})
         snap = package.get("snap", {})
         publisher = snap.get("publisher", {})
         resp["package"]["description"] = snap.get("summary", "")
@@ -135,7 +136,12 @@ def paginate(
 
 
 def get_packages(
-    store, fields: List[str], size: int = 10, page: int = 1, filters: Dict = {}
+    store,
+    store_name: str,
+    fields: List[str],
+    size: int = 10,
+    page: int = 1,
+    filters: Dict = {},
 ) -> List[Dict[str, Any]]:
     """
     Retrieves a list of packages from the store based on the specified
@@ -159,16 +165,14 @@ def get_packages(
     if filters:
         parsed_packages = []
         for package in packages:
-            parsed_packages.append(parse_package_for_card(package))
+            parsed_packages.append(parse_package_for_card(package, store_name))
         filtered_packages = filter_packages(parsed_packages, filters)
-        res = paginate(
-            filtered_packages, page, size, total_pages
-        )
+        res = paginate(filtered_packages, page, size, total_pages)
     else:
         packages_per_page = paginate(packages, page, size, total_pages)
         parsed_packages = []
         for package in packages_per_page:
-            parsed_packages.append(parse_package_for_card(package))
+            parsed_packages.append(parse_package_for_card(package, store_name))
         res = parsed_packages
 
     return {"packages": res, "total_pages": total_pages}
