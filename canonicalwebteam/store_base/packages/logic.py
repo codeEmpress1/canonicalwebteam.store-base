@@ -85,7 +85,6 @@ def parse_package_for_card(
         resp["package"]["icon_url"] = helpers.get_icon(result.get("media", []))
 
     if store_name.startswith("snapcraft"):
-        # pprint({package_type: package})
         snap = package.get("snap", {})
         publisher = snap.get("publisher", {})
         resp["package"]["description"] = snap.get("summary", "")
@@ -167,8 +166,10 @@ def get_packages(
         for package in packages:
             parsed_packages.append(parse_package_for_card(package, store_name))
         filtered_packages = filter_packages(parsed_packages, filters)
+        total_pages = -(len(filtered_packages) // -size)
         res = paginate(filtered_packages, page, size, total_pages)
     else:
+        total_pages = -(len(packages) // -size)
         packages_per_page = paginate(packages, page, size, total_pages)
         parsed_packages = []
         for package in packages_per_page:

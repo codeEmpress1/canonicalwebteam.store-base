@@ -1,0 +1,14 @@
+{% extends "_layout.html" %}
+
+{% block meta_title %}{{ error_name }}{% endblock %}
+
+{% block content %}
+<div class="p-strip">
+  <div class="row">
+    <div class="col-10">
+      <h1>{{ error_name }}</h1>
+      <h2>Please try again later</h2>
+    </div>
+  </div>
+</div>
+{% endblock %}
