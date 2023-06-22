@@ -1,5 +1,4 @@
 import functools
-
 import flask
 
 from canonicalwebteam.store_base.auth.authentication import is_authenticated

@@ -168,8 +168,10 @@ def get_packages(
         for package in packages:
             parsed_packages.append(parse_package_for_card(package, store_name))
         filtered_packages = filter_packages(parsed_packages, filters)
+        total_pages = -(len(filtered_packages) // -size)
         res = paginate(filtered_packages, page, size, total_pages)
     else:
+        total_pages = -(len(packages) // -size)
         packages_per_page = paginate(packages, page, size, total_pages)
         parsed_packages = []
         for package in packages_per_page:
