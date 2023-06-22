@@ -101,8 +101,7 @@ def parse_package_for_card(
         resp["package"]["icon_url"] = helpers.get_icon(
             package["snap"]["media"]
         )
-    if resp["package"]["name"].startswith("postgresql"):
-        pprint(resp)
+
     return resp
 
 
