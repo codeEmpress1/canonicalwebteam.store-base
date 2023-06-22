@@ -74,7 +74,9 @@ def parse_package_for_card(
 
         resp["package"]["type"] = package.get("type", "")
         resp["package"]["name"] = package.get("name", "")
-        resp["package"]["description"] = result.get("summary", "")
+        resp["package"]["description"] = result.get("summary", "").split(".")[
+            0
+        ]
         resp["package"]["display_name"] = result.get(
             "title", format_slug(package.get("name", ""))
         )
@@ -85,10 +87,9 @@ def parse_package_for_card(
         resp["package"]["icon_url"] = helpers.get_icon(result.get("media", []))
 
     if store_name.startswith("snapcraft"):
-        # pprint({package_type: package})
         snap = package.get("snap", {})
         publisher = snap.get("publisher", {})
-        resp["package"]["description"] = snap.get("summary", "")
+        resp["package"]["description"] = snap.get("summary", "").split(".")[0]
         resp["package"]["display_name"] = snap.get("title", "")
         resp["package"]["type"] = "snap"
         resp["package"]["name"] = package.get("name", "")
@@ -100,7 +101,8 @@ def parse_package_for_card(
         resp["package"]["icon_url"] = helpers.get_icon(
             package["snap"]["media"]
         )
-
+    if resp["package"]["name"].startswith("postgresql"):
+        pprint(resp)
     return resp
 
 
