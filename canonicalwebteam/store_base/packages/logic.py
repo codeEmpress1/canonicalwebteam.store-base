@@ -47,6 +47,7 @@ def fetch_package(store_api, package_name: str, fields: List[str]):
 
     :param: store_api: The specific store API object.
     :param: package_name (str): The name of the package to fetch.
+    :param: fields (List[str]): A list of fields to include in the package
 
     :returns: a dictionary containing the fetched package.
     """
@@ -397,6 +398,15 @@ def get_snaps_account_info(account_info):
 
 
 def get_package(store, store_name: str, package_name: str, fields: List[str]):
+    """Get a package by name
+
+    :param store: The store object.
+    :param store_name: The name of the store.
+    :param package_name: The name of the package.
+    :param fields: The fields to fetch.
+
+    :return: A dictionary containing the package.
+    """
     package = fetch_package(store, package_name, fields).get("package", {})
 
     return {"package": parse_package_for_card(package, store_name)}
