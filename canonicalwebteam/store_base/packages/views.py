@@ -97,7 +97,7 @@ def package(package_type):
         return response
 
 
-@store_packages.route("/<package_name>.json")
+@store_packages.route("/<package_name>/card.json")
 def get_store_package(package_name):
     app_name = app.name
 
