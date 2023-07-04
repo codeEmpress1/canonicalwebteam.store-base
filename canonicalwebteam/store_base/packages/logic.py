@@ -1,4 +1,7 @@
 import datetime
+import re
+
+import yaml
 
 import talisker
 from flask import make_response
@@ -36,6 +39,26 @@ def fetch_packages(store_api, fields: List[str]) -> Package:
     response = make_response({"packages": packages})
     response.cache_control.max_age = 3600
     return response.json
+
+
+def get_bundle_charms(charm_apps):
+    result = []
+
+    if charm_apps:
+        for app_name, data in charm_apps.items():
+            # Charm names could be with the old prefix/suffix
+            # Like: cs:~charmed-osm/mariadb-k8s-35
+            name = data["charm"]
+            if name.startswith("cs:") or name.startswith("ch:"):
+                name = re.match(r"(?:cs:|ch:)(?:.+/)?(\S*?)(?:-\d+)?$", name)[
+                    1
+                ]
+
+            charm = {"title": format_slug(name), "name": name}
+
+            result.append(charm)
+
+    return result
 
 
 def parse_package_for_card(
@@ -85,6 +108,16 @@ def parse_package_for_card(
         resp["publisher"]["validation"] = publisher.get("validation", "")
         resp["categories"] = result.get("categories", [])
         resp["package"]["icon_url"] = helpers.get_icon(result.get("media", []))
+
+        if resp["package"]["type"] == "bundle":
+            bundle_details = yaml.load(
+                package["default-release"]["revision"]["metadata-yaml"]
+            )
+            resp["charms"] = get_bundle_charms(
+                bundle_details.get(
+                    "applications", bundle_details.get("services", [])
+                )
+            )
 
     if store_name.startswith("snapcraft"):
         snap = package.get("snap", {})
