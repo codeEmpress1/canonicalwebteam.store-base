@@ -12,8 +12,8 @@ from canonicalwebteam.store_api.exceptions import StoreApiError
 from canonicalwebteam.store_base.utils import helpers
 
 
-Package = TypedDict(
-    "Package_type",
+Packages = TypedDict(
+    "Packages_type",
     {
         "packages": List[
             Dict[str, Dict[str, str or List[str]] or List[Dict[str, str]]]
@@ -21,8 +21,17 @@ Package = TypedDict(
     },
 )
 
+Package = TypedDict(
+    "Package_type",
+    {
+        "package": Dict[
+            str, Dict[str, str or List[str]] or List[Dict[str, str]]
+        ]
+    },
+)
 
-def fetch_packages(store_api, fields: List[str]) -> Package:
+
+def fetch_packages(store_api, fields: List[str]) -> Packages:
     """
     Fetches packages from the store API based on the specified fields.
 
@@ -41,7 +50,7 @@ def fetch_packages(store_api, fields: List[str]) -> Package:
     return response.json
 
 
-def fetch_package(store_api, package_name: str, fields: List[str]):
+def fetch_package(store_api, package_name: str, fields: List[str]) -> Package:
     """
     Fetches a package from the store API based on the specified package name.
 
@@ -172,12 +181,12 @@ def parse_package_for_card(
 
 
 def paginate(
-    packages: List[Package], page: int, size: int, total_pages: int
-) -> List[Package]:
+    packages: List[Packages], page: int, size: int, total_pages: int
+) -> List[Packages]:
     """
     Paginates a list of packages based on the specified page and size.
 
-    :param: packages (List[Package]): The list of packages to paginate.
+    :param: packages (List[Packages]): The list of packages to paginate.
     :param: page (int): The current page number.
     :param: size (int): The number of packages to include in each page.
     :param: total_pages (int): The total number of pages.
@@ -252,7 +261,7 @@ def get_packages(
 
 
 def filter_packages(
-    packages: List[Package], filter_params: Dict[str, List[str]]
+    packages: List[Packages], filter_params: Dict[str, List[str]]
 ):
     """
     Filters the list of packages based on the specified filter parameters.
@@ -397,7 +406,9 @@ def get_snaps_account_info(account_info):
     return user_snaps, registered_snaps
 
 
-def get_package(store, store_name: str, package_name: str, fields: List[str]):
+def get_package(
+    store, store_name: str, package_name: str, fields: List[str]
+) -> Package:
     """Get a package by name
 
     :param store: The store object.
