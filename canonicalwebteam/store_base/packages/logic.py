@@ -12,7 +12,7 @@ from canonicalwebteam.store_api.exceptions import StoreApiError
 from canonicalwebteam.store_base.utils import helpers
 
 
-Package = TypedDict(
+Packages = TypedDict(
     "Package_type",
     {
         "packages": List[
@@ -22,7 +22,7 @@ Package = TypedDict(
 )
 
 
-def fetch_packages(store_api, fields: List[str]) -> Package:
+def fetch_packages(store_api, fields: List[str]) -> Packages:
     """
     Fetches packages from the store API based on the specified fields.
 
@@ -37,6 +37,25 @@ def fetch_packages(store_api, fields: List[str]) -> Package:
     store = store_api(talisker.requests.get_session())
     packages = store.find(fields=fields).get("results", [])
     response = make_response({"packages": packages})
+    response.cache_control.max_age = 3600
+    return response.json
+
+
+def fetch_package(store_api, package_name: str, fields: List[str]):
+    """
+    Fetches a package from the store API based on the specified package name.
+
+    :param: store_api: The specific store API object.
+    :param: package_name (str): The name of the package to fetch.
+
+    :returns: a dictionary containing the fetched package.
+    """
+    store = store_api(talisker.requests.get_session())
+    package = store.get_item_details(
+        name=package_name,
+        fields=fields,
+    )
+    response = make_response({"package": package})
     response.cache_control.max_age = 3600
     return response.json
 
@@ -152,12 +171,12 @@ def parse_package_for_card(
 
 
 def paginate(
-    packages: List[Package], page: int, size: int, total_pages: int
-) -> List[Package]:
+    packages: List[Packages], page: int, size: int, total_pages: int
+) -> List[Packages]:
     """
     Paginates a list of packages based on the specified page and size.
 
-    :param: packages (List[Package]): The list of packages to paginate.
+    :param: packages (List[Packages]): The list of packages to paginate.
     :param: page (int): The current page number.
     :param: size (int): The number of packages to include in each page.
     :param: total_pages (int): The total number of pages.
@@ -232,7 +251,7 @@ def get_packages(
 
 
 def filter_packages(
-    packages: List[Package], filter_params: Dict[str, List[str]]
+    packages: List[Packages], filter_params: Dict[str, List[str]]
 ):
     """
     Filters the list of packages based on the specified filter parameters.
@@ -375,3 +394,9 @@ def get_snaps_account_info(account_info):
                 snap_info["is_new"] = True
 
     return user_snaps, registered_snaps
+
+
+def get_package(store, store_name: str, package_name: str, fields: List[str]):
+    package = fetch_package(store, package_name, fields).get("package", {})
+
+    return {"package": parse_package_for_card(package, store_name)}
