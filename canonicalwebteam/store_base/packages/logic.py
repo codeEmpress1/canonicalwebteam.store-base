@@ -62,7 +62,7 @@ def get_bundle_charms(charm_apps):
 
 
 def parse_package_for_card(
-    package: Dict[str, Any], store_name: str
+    package: Dict[str, Any], store_name: str, store_api: Any
 ) -> Package:
     """
     Parses a package (snap, charm, or bundle) and returns the formatted package
@@ -76,6 +76,7 @@ def parse_package_for_card(
         so we won't have to check for the package type before parsing.
 
     """
+    store = store_api(talisker.requests.get_session())
     resp = {
         "package": {
             "description": "",
@@ -110,14 +111,21 @@ def parse_package_for_card(
         resp["package"]["icon_url"] = helpers.get_icon(result.get("media", []))
 
         if resp["package"]["type"] == "bundle":
-            bundle_details = yaml.load(
-                package["default-release"]["revision"]["metadata-yaml"]
+            name = package["name"]
+            default_release = store.get_item_details(
+                name, fields=["default-release"]
             )
-            resp["charms"] = get_bundle_charms(
+            bundle_yaml = default_release["default-release"]["revision"][
+                "bundle-yaml"
+            ]
+
+            bundle_details = yaml.load(bundle_yaml, Loader=yaml.FullLoader)
+            bundle_charms = get_bundle_charms(
                 bundle_details.get(
                     "applications", bundle_details.get("services", [])
                 )
             )
+            resp["charms"] = bundle_charms
 
     if store_name.startswith("snapcraft"):
         snap = package.get("snap", {})
@@ -199,7 +207,9 @@ def get_packages(
     if filters:
         parsed_packages = []
         for package in packages:
-            parsed_packages.append(parse_package_for_card(package, store_name))
+            parsed_packages.append(
+                parse_package_for_card(package, store_name, store)
+            )
         filtered_packages = filter_packages(parsed_packages, filters)
         total_pages = -(len(filtered_packages) // -size)
         res = paginate(filtered_packages, page, size, total_pages)
@@ -208,7 +218,9 @@ def get_packages(
         packages_per_page = paginate(packages, page, size, total_pages)
         parsed_packages = []
         for package in packages_per_page:
-            parsed_packages.append(parse_package_for_card(package, store_name))
+            parsed_packages.append(
+                parse_package_for_card(package, store_name, store)
+            )
         res = parsed_packages
 
     return {"packages": res, "total_pages": total_pages}

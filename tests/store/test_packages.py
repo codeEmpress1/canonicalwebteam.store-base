@@ -10,12 +10,18 @@ from canonicalwebteam.store_base.packages.logic import (
     parse_package_for_card,
     paginate,
 )
+from canonicalwebteam.store_api.stores.charmstore import CharmStore
+from canonicalwebteam.store_api.stores.snapstore import SnapStore
 
 
 class TestPackages(unittest.TestCase):
     def test_parse_package(self):
-        snap_result = parse_package_for_card(sample_snap, "snapcraft")
-        charm_result = parse_package_for_card(sample_charm, "charmhub")
+        snap_result = parse_package_for_card(
+            sample_snap, "snapcraft", SnapStore
+        )
+        charm_result = parse_package_for_card(
+            sample_charm, "charmhub", CharmStore
+        )
 
         self.assertEqual(
             snap_result["package"]["description"],
