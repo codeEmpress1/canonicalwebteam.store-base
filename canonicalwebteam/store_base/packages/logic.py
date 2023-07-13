@@ -104,11 +104,16 @@ def parse_package_for_card(
         resp["package"]["display_name"] = result.get(
             "title", format_slug(package.get("name", ""))
         )
-        resp["package"]["platforms"] = result.get("deployable-on", [])
         resp["publisher"]["display_name"] = publisher.get("display-name", "")
         resp["publisher"]["validation"] = publisher.get("validation", "")
         resp["categories"] = result.get("categories", [])
         resp["package"]["icon_url"] = helpers.get_icon(result.get("media", []))
+
+        platforms = result.get("platforms", [])
+        if platforms:
+            resp["package"]["platforms"] = platforms
+        else:
+            resp["package"]["platforms"] = ["vm"]
 
         if resp["package"]["type"] == "bundle":
             name = package["name"]
