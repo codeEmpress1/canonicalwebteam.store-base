@@ -3,7 +3,12 @@ import responses
 import unittest
 from urllib.parse import urlencode
 import json
-from tests.mock_data import sample_package_list, sample_package_list2
+from tests.mock_data import (
+    sample_package_list,
+    sample_package_list2,
+    sample_package_card,
+    sample_package_card2,
+)
 from canonicalwebteam.store_base.app import create_app
 
 
@@ -64,6 +69,27 @@ class TestStoreEndpointWithCharmhub(TestStoreEndpoint):
 
         self.assertEqual(response.status_code, 200)
 
+    def test_package_endpoint_with_charmhub(self):
+        os.environ["SECRET_KEY"] = "secret_key"
+        app = create_app("charmhub_beta", testing=True)
+        app.name = "charmhub_beta"
+        app.config["WTF_CSRF_METHODS"] = []
+        app.testing = True
+        client = app.test_client()
+
+        responses.add(
+            responses.Response(
+                method="GET",
+                url=self.charms_api_url,
+                body=json.dumps(sample_package_card),
+                status=200,
+            )
+        )
+
+        response = client.get(self.endpoint_url)
+
+        self.assertEqual(response.status_code, 200)
+
 
 class TestStoreEndpointWithSnapcraft(TestStoreEndpoint):
     def test_store_endpoint_with_snapcraft(self):
@@ -79,6 +105,27 @@ class TestStoreEndpointWithSnapcraft(TestStoreEndpoint):
                 method="GET",
                 url=self.snaps_api_url,
                 body=json.dumps(sample_package_list2),
+                status=200,
+            )
+        )
+
+        response = client.get(self.endpoint_url)
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_package_endpoint_with_snapcraft(self):
+        os.environ["SECRET_KEY"] = "secret_key"
+        app = create_app("charmhub_beta", testing=True)
+        app.name = "charmhub_beta"
+        app.config["WTF_CSRF_METHODS"] = []
+        app.testing = True
+        client = app.test_client()
+
+        responses.add(
+            responses.Response(
+                method="GET",
+                url=self.snaps_api_url,
+                body=json.dumps(sample_package_card2),
                 status=200,
             )
         )
