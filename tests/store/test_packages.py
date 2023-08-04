@@ -1,9 +1,9 @@
 import unittest
 from tests.mock_data import (
-    sample_snap,
-    sample_charm,
-    sample_package_list,
-    sample_package_list2,
+    sample_snap_api_response,
+    sample_charm_api_response,
+    sample_charm_list,
+    sample_snap_list,
 )
 from canonicalwebteam.store_base.packages.logic import (
     filter_packages,
@@ -25,41 +25,37 @@ class TestPackages(unittest.TestCase):
 
         self.assertEqual(
             snap_result["package"]["description"],
-            sample_snap["snap"]["summary"],
+            sample_snap_api_response["snap"]["summary"],
         )
         self.assertEqual(
             snap_result["package"]["display_name"],
-            sample_snap["snap"]["title"],
+            sample_snap_api_response["snap"]["title"],
         )
         self.assertEqual(snap_result["package"]["type"], "snap")
         self.assertEqual(
             charm_result["package"]["description"],
-            sample_charm["result"]["summary"],
+            sample_charm_api_response["result"]["summary"],
         )
         self.assertEqual(
             charm_result["package"]["display_name"],
-            sample_charm["result"]["title"],
+            sample_charm_api_response["result"]["title"],
         )
         self.assertEqual(charm_result["package"]["type"], "charm")
 
     def test_paginate(self):
         size1 = 5
         size2 = 3
-        total_pages1 = -(len(sample_package_list) // -size1)
-        total_pages2 = -(len(sample_package_list) // -size2)
+        total_pages1 = -(len(sample_charm_list) // -size1)
+        total_pages2 = -(len(sample_charm_list) // -size2)
         self.assertEqual(
             len(
-                paginate(
-                    sample_package_list["results"], 1, size1, total_pages1
-                )
+                paginate(sample_charm_list["results"], 1, size1, total_pages1)
             ),
             5,
         )
         self.assertEqual(
             len(
-                paginate(
-                    sample_package_list["results"], 2, size2, total_pages2
-                )
+                paginate(sample_charm_list["results"], 2, size2, total_pages2)
             ),
             3,
         )
@@ -92,34 +88,22 @@ class TestPackages(unittest.TestCase):
         }
 
         self.assertEqual(
-            len(
-                filter_packages(sample_package_list["results"], filter_params1)
-            ),
+            len(filter_packages(sample_charm_list["results"], filter_params1)),
             10,
         )
         self.assertEqual(
-            len(
-                filter_packages(sample_package_list["results"], filter_params2)
-            ),
+            len(filter_packages(sample_charm_list["results"], filter_params2)),
             3,
         )
         self.assertEqual(
-            len(
-                filter_packages(sample_package_list["results"], filter_params3)
-            ),
+            len(filter_packages(sample_charm_list["results"], filter_params3)),
             1,
         )
         self.assertEqual(
-            len(
-                filter_packages(sample_package_list["results"], filter_params4)
-            ),
+            len(filter_packages(sample_charm_list["results"], filter_params4)),
             2,
         )
         self.assertEqual(
-            len(
-                filter_packages(
-                    sample_package_list2["results"], filter_params5
-                )
-            ),
+            len(filter_packages(sample_snap_list["results"], filter_params5)),
             2,
         )
