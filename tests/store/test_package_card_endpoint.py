@@ -92,3 +92,4 @@ class TestPackageCardEndpointWithSnapcraft(TestPackageCardEndpoint):
         response = client.get(self.endpoint_url)
 
         self.assertEqual(response.status_code, 200)
+        self.assertIn("package", response.json)

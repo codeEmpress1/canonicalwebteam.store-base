@@ -17,10 +17,10 @@ from canonicalwebteam.store_api.stores.snapstore import SnapStore
 class TestPackages(unittest.TestCase):
     def test_parse_package(self):
         snap_result = parse_package_for_card(
-            sample_snap, "snapcraft", SnapStore
+            sample_snap_api_response, "snapcraft", SnapStore
         )
         charm_result = parse_package_for_card(
-            sample_charm, "charmhub", CharmStore
+            sample_charm_api_response, "charmhub", CharmStore
         )
 
         self.assertEqual(

@@ -420,4 +420,4 @@ def get_package(
     """
     package = fetch_package(store, package_name, fields).get("package", {})
 
-    return {"package": parse_package_for_card(package, store_name)}
+    return {"package": parse_package_for_card(package, store_name, store)}
