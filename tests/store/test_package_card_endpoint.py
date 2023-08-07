@@ -4,18 +4,19 @@ import unittest
 from urllib.parse import urlencode
 import json
 from tests.mock_data import (
-    sample_charm_list,
+    sample_charm_api_response,
     sample_snap_api_response,
 )
 from canonicalwebteam.store_base.app import create_app
 
 
-class TestStoreEndpoint(unittest.TestCase):
+class TestPackageCardEndpoint(unittest.TestCase):
     def setUp(self) -> None:
-        self.snaps_api_url = "".join(
+        self.snap_api_url = "".join(
             [
-                "https://api.snapcraft.io/v2/",
-                "snaps/find",
+                "https://api.snapcraft.io/api/v1/",
+                "snaps/info/",
+                "test",
                 "?",
                 urlencode(
                     {"fields": "title,summary,media,publisher,categories"}
@@ -23,11 +24,12 @@ class TestStoreEndpoint(unittest.TestCase):
             ]
         )
 
-        self.charms_api_url = "".join(
+        self.charm_api_url = "".join(
             [
                 "https://api.charmhub.io/v2/",
-                "charms/find",
-                "?q=&category=&publisher=&",
+                "charms/info/",
+                "test",
+                "?",
                 urlencode(
                     {
                         "fields": "result.categories,result.summary,"
@@ -41,12 +43,12 @@ class TestStoreEndpoint(unittest.TestCase):
             ]
         )
 
-        self.endpoint_url = "/store.json"
+        self.endpoint_url = "/test/card.json"
 
 
-class TestStoreEndpointWithCharmhub(TestStoreEndpoint):
+class TestPackageCardEndpointWithCharmhub(TestPackageCardEndpoint):
     @responses.activate
-    def test_store_endpoint_with_charmhub(self):
+    def test_package_endpoint_with_charmhub(self):
         os.environ["SECRET_KEY"] = "secret_key"
         app = create_app("charmhub_beta", testing=True)
         app.name = "charmhub_beta"
@@ -57,8 +59,8 @@ class TestStoreEndpointWithCharmhub(TestStoreEndpoint):
         responses.add(
             responses.Response(
                 method="GET",
-                url=self.charms_api_url,
-                body=json.dumps(sample_charm_list),
+                url=self.charm_api_url,
+                body=json.dumps(sample_charm_api_response),
                 status=200,
             )
         )
@@ -68,9 +70,9 @@ class TestStoreEndpointWithCharmhub(TestStoreEndpoint):
         self.assertEqual(response.status_code, 200)
 
 
-class TestStoreEndpointWithSnapcraft(TestStoreEndpoint):
+class TestPackageCardEndpointWithSnapcraft(TestPackageCardEndpoint):
     @responses.activate
-    def test_store_endpoint_with_snapcraft(self):
+    def test_package_endpoint_with_snapcraft(self):
         os.environ["SECRET_KEY"] = "secret_key"
         app = create_app("snapcraft_beta", testing=True)
         app.name = "snapcraft_beta"
@@ -81,8 +83,8 @@ class TestStoreEndpointWithSnapcraft(TestStoreEndpoint):
         responses.add(
             responses.Response(
                 method="GET",
-                url=self.snaps_api_url,
-                body=json.dumps({"results": [sample_snap_api_response]}),
+                url=self.snap_api_url,
+                body=json.dumps(sample_snap_api_response),
                 status=200,
             )
         )
@@ -90,3 +92,4 @@ class TestStoreEndpointWithSnapcraft(TestStoreEndpoint):
         response = client.get(self.endpoint_url)
 
         self.assertEqual(response.status_code, 200)
+        self.assertIn("package", response.json)

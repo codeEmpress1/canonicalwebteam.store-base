@@ -1,4 +1,4 @@
-sample_snap = {
+sample_snap_api_response = {
     "name": "test_snap_data",
     "snap": {
         "media": [
@@ -58,7 +58,7 @@ sample_snap = {
     "snap-id": "somerandomID",
 }
 
-sample_charm = {
+sample_charm_api_response = {
     "default-release": {
         "channel": {
             "base": {
@@ -107,7 +107,7 @@ sample_charm = {
     },
 }
 
-sample_package_list = {
+sample_charm_list = {
     "results": [
         {
             "package": {
@@ -193,7 +193,7 @@ sample_package_list = {
         },
     ]
 }
-sample_package_list2 = {
+sample_snap_list = {
     "results": [
         {
             "package": {
@@ -241,4 +241,27 @@ sample_package_list2 = {
             "categories": [{"name": "cat-2", "display_name": "cat 2"}],
         },
     ]
+}
+
+sample_package_card = {
+    "package": {
+        "package": {
+            "name": "test1",
+            "platforms": ["VM", "kubernetes"],
+            "type": "charm",
+        },
+        "publisher": {"display-name": "publisher test1"},
+        "categories": [{"name": "cat-1", "display_name": "cat 1"}],
+    }
+}
+sample_package_card2 = {
+    "package": {
+        "package": {
+            "name": "test15",
+            "platforms": ["arch3"],
+            "type": "snap",
+        },
+        "publisher": {"display-name": "publisher test15"},
+        "categories": [{"name": "cat-1", "display_name": "cat 1"}],
+    }
 }

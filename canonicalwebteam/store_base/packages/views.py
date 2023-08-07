@@ -10,6 +10,7 @@ from flask import (
 
 from canonicalwebteam.store_base.packages.logic import (
     get_packages,
+    get_package,
     get_snaps_account_info,
 )
 from canonicalwebteam.store_base.utils.config import PACKAGE_PARAMS
@@ -25,7 +26,6 @@ store_packages = Blueprint(
 @store_packages.route("/store.json")
 def get_store_packages():
     app_name = app.name
-
     filters = dict(request.args)
     filters.pop("page", {})
     params = PACKAGE_PARAMS[app_name]
@@ -95,3 +95,14 @@ def package(package_type):
         )
 
         return response
+
+
+@store_packages.route("/<package_name>/card.json")
+def get_store_package(package_name):
+    app_name = app.name
+
+    params = PACKAGE_PARAMS[app_name]
+    store, fields = params["store"], params["fields"]
+
+    res = make_response(get_package(store, app_name, package_name, fields))
+    return res
