@@ -64,6 +64,7 @@ def fetch_package(store_api, package_name: str, fields: List[str]) -> Package:
     package = store.get_item_details(
         name=package_name,
         fields=fields,
+        api_version=2,
     )
     response = make_response({"package": package})
     response.cache_control.max_age = 3600
