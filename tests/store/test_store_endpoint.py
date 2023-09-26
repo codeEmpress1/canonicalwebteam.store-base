@@ -8,6 +8,18 @@ from tests.mock_data import (
     sample_snap_api_response,
 )
 from canonicalwebteam.store_base.app import create_app
+import functools
+import flask
+
+
+def login_required_test(func):
+    @functools.wraps(func)
+    def is_user_logged_in(*args, **kwargs):
+        if "publisher" not in flask.session:
+            return flask.redirect(f"/login?next=/beta/{flask.request.path}")
+        return func(*args, **kwargs)
+
+    return is_user_logged_in
 
 
 class TestStoreEndpoint(unittest.TestCase):
@@ -48,7 +60,7 @@ class TestStoreEndpointWithCharmhub(TestStoreEndpoint):
     @responses.activate
     def test_store_endpoint_with_charmhub(self):
         os.environ["SECRET_KEY"] = "secret_key"
-        app = create_app("charmhub_beta", testing=True)
+        app = create_app("charmhub_beta", login_required_test, testing=True)
         app.name = "charmhub_beta"
         app.config["WTF_CSRF_METHODS"] = []
         app.testing = True
@@ -72,7 +84,7 @@ class TestStoreEndpointWithSnapcraft(TestStoreEndpoint):
     @responses.activate
     def test_store_endpoint_with_snapcraft(self):
         os.environ["SECRET_KEY"] = "secret_key"
-        app = create_app("snapcraft_beta", testing=True)
+        app = create_app("snapcraft_beta", login_required_test, testing=True)
         app.name = "snapcraft_beta"
         app.config["WTF_CSRF_METHODS"] = []
         app.testing = True
