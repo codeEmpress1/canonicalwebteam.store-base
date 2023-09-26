@@ -79,7 +79,6 @@ def init_packages(app):
             return response
 
         if app_name.startswith("snapcraft"):
-
             account_info = publisher_api.get_account(flask.session)
 
             user_snaps, registered_snaps = get_snaps_account_info(account_info)

@@ -5,7 +5,6 @@ It gets response from the store_api and it extends
 
 each store blueprint to make a complete application
 """
-from flask import session, make_response
 from canonicalwebteam.flask_base.app import FlaskBase
 import canonicalwebteam.store_base.utils.config as config
 from canonicalwebteam.store_base.packages.views import init_packages
@@ -15,7 +14,11 @@ from canonicalwebteam.store_base.sample_blueprint.views import sample_bp
 
 
 def create_app(
-    app_name, login_required, store_bp=sample_bp, utility_processor=None, testing=False
+    app_name,
+    login_required,
+    store_bp=sample_bp,
+    utility_processor=None,
+    testing=False,
 ):
     app = FlaskBase(__name__, app_name)
 
