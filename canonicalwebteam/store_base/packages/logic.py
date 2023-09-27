@@ -261,7 +261,11 @@ def get_packages(
             )
         res = parsed_packages
 
-    return {"packages": res, "total_pages": total_pages}
+    return {
+        "packages": res,
+        "total_pages": total_pages,
+        "total_items": len(packages),
+    }
 
 
 def filter_packages(
