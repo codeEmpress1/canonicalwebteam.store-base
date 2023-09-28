@@ -27,13 +27,15 @@ def init_packages(app):
         app_name = app.name
         filters = dict(request.args)
         filters.pop("page", {})
+        filters.pop("q", {})
         params = PACKAGE_PARAMS[app_name]
         store, fields, size = params["store"], params["fields"], params["size"]
 
         page = int(request.args.get("page", 1))
+        query = request.args.get("q")
 
         res = make_response(
-            get_packages(store, app_name, fields, size, page, filters)
+            get_packages(store, app_name, fields, size, page, query, filters)
         )
         return res
 
