@@ -140,7 +140,7 @@ def parse_package_for_card(
         resp["categories"] = result.get("categories", [])
         resp["package"]["icon_url"] = helpers.get_icon(result.get("media", []))
 
-        platforms = result.get("platforms", [])
+        platforms = result.get("deployable-on", [])
         if platforms:
             resp["package"]["platforms"] = platforms
         else:
