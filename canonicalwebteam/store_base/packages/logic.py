@@ -85,7 +85,7 @@ def get_bundle_charms(charm_apps):
                     1
                 ]
 
-            charm = {"title": format_slug(name), "name": name}
+            charm = {"display_name": format_slug(name), "name": name}
 
             result.append(charm)
 
@@ -161,7 +161,7 @@ def parse_package_for_card(
                     "applications", bundle_details.get("services", [])
                 )
             )
-            resp["charms"] = bundle_charms
+            resp["package"]["charms"] = bundle_charms
 
     if store_name.startswith("snapcraft"):
         snap = package.get("snap", {})
