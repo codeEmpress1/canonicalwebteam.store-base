@@ -250,9 +250,11 @@ def get_packages(
             )
         filtered_packages = filter_packages(parsed_packages, filters)
         total_pages = -(len(filtered_packages) // -size)
+        total_items = len(filtered_packages)
         res = paginate(filtered_packages, page, size, total_pages)
     else:
         total_pages = -(len(packages) // -size)
+        total_items = len(packages)
         packages_per_page = paginate(packages, page, size, total_pages)
         parsed_packages = []
         for package in packages_per_page:
@@ -264,7 +266,7 @@ def get_packages(
     return {
         "packages": res,
         "total_pages": total_pages,
-        "total_items": len(packages),
+        "total_items": total_items,
     }
 
 
