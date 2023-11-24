@@ -93,7 +93,11 @@ def get_bundle_charms(charm_apps):
 
 
 def parse_package_for_card(
-    package: Dict[str, Any], store_name: str, store_api: Any
+    package: Dict[str, Any],
+    store_name: str,
+    store_api: Any,
+    publisher_api: Any,
+    libraries: bool = False,
 ) -> Package:
     """
     Parses a package (snap, charm, or bundle) and returns the formatted package
@@ -108,6 +112,7 @@ def parse_package_for_card(
 
     """
     store = store_api(talisker.requests.get_session())
+    publisher_api = publisher_api(talisker.requests.get_session())
     resp = {
         "package": {
             "description": "",
@@ -116,6 +121,11 @@ def parse_package_for_card(
             "name": "",
             "platforms": [],
             "type": "",
+            "channel": {
+                "name": "",
+                "risk": "",
+                "track": "",
+            },
         },
         "publisher": {"display_name": "", "name": "", "validation": ""},
         "categories": [],
@@ -126,7 +136,13 @@ def parse_package_for_card(
     if store_name.startswith("charmhub"):
         result = package.get("result", {})
         publisher = result.get("publisher", {})
-
+        channel = package.get("default-release", {}).get("channel", {})
+        risk = channel.get("risk", "")
+        track = channel.get("track", "")
+        if libraries:
+            resp["package"]["libraries"] = publisher_api.get_charm_libraries(
+                package["name"]
+            ).get("libraries", [])
         resp["package"]["type"] = package.get("type", "")
         resp["package"]["name"] = package.get("name", "")
         resp["package"]["description"] = result.get("summary", "").split(".")[
@@ -135,6 +151,9 @@ def parse_package_for_card(
         resp["package"]["display_name"] = result.get(
             "title", format_slug(package.get("name", ""))
         )
+        resp["package"]["channel"]["risk"] = risk
+        resp["package"]["channel"]["track"] = track
+        resp["package"]["channel"]["name"] = f"{track}/{risk}"
         resp["publisher"]["display_name"] = publisher.get("display-name", "")
         resp["publisher"]["validation"] = publisher.get("validation", "")
         resp["categories"] = result.get("categories", [])
@@ -215,7 +234,9 @@ def paginate(
 
 def get_packages(
     store,
+    publisher: Any,
     store_name: str,
+    libraries: bool,
     fields: List[str],
     size: int = 10,
     page: int = 1,
@@ -246,7 +267,9 @@ def get_packages(
         parsed_packages = []
         for package in packages:
             parsed_packages.append(
-                parse_package_for_card(package, store_name, store)
+                parse_package_for_card(
+                    package, store_name, store, publisher, libraries
+                )
             )
         filtered_packages = filter_packages(parsed_packages, filters)
         total_pages = -(len(filtered_packages) // -size)
@@ -259,7 +282,9 @@ def get_packages(
         parsed_packages = []
         for package in packages_per_page:
             parsed_packages.append(
-                parse_package_for_card(package, store_name, store)
+                parse_package_for_card(
+                    package, store_name, store, publisher, libraries
+                )
             )
         res = parsed_packages
 
@@ -417,7 +442,12 @@ def get_snaps_account_info(account_info):
 
 
 def get_package(
-    store, store_name: str, package_name: str, fields: List[str]
+    store,
+    publisher_api,
+    store_name: str,
+    package_name: str,
+    fields: List[str],
+    libraries: bool,
 ) -> Package:
     """Get a package by name
 
@@ -429,5 +459,7 @@ def get_package(
     :return: A dictionary containing the package.
     """
     package = fetch_package(store, package_name, fields).get("package", {})
-
-    return {"package": parse_package_for_card(package, store_name, store)}
+    resp = parse_package_for_card(
+        package, store_name, store, publisher_api, libraries
+    )
+    return {"package": resp}

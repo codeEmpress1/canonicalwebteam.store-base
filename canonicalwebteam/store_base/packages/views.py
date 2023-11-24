@@ -25,17 +25,34 @@ def init_packages(app):
     @store_packages.route("/store.json")
     def get_store_packages():
         app_name = app.name
-        filters = dict(request.args)
-        filters.pop("page", {})
-        filters.pop("q", {})
+        args = dict(request.args)
+        args.pop("page", {})
+        args.pop("q", {})
+        libraries = bool(args.pop("fields", ""))
+        filters = args
         params = PACKAGE_PARAMS[app_name]
-        store, fields, size = params["store"], params["fields"], params["size"]
+        store, publisher, fields, size = (
+            params["store"],
+            params["publisher"],
+            params["fields"],
+            params["size"],
+        )
 
         page = int(request.args.get("page", 1))
         query = request.args.get("q")
 
         res = make_response(
-            get_packages(store, app_name, fields, size, page, query, filters)
+            get_packages(
+                store,
+                publisher,
+                app_name,
+                libraries,
+                fields,
+                size,
+                page,
+                query,
+                filters,
+            )
         )
         return res
 
@@ -100,10 +117,19 @@ def init_packages(app):
     def get_store_package(package_name):
         app_name = app.name
 
+        has_libraries = bool(request.args.get("fields", ""))
         params = PACKAGE_PARAMS[app_name]
-        store, fields = params["store"], params["fields"]
+        store, publisher, fields = (
+            params["store"],
+            params["publisher"],
+            params["fields"],
+        )
 
-        res = make_response(get_package(store, app_name, package_name, fields))
+        res = make_response(
+            get_package(
+                store, publisher, app_name, package_name, fields, has_libraries
+            )
+        )
         return res
 
     app.register_blueprint(store_packages)
