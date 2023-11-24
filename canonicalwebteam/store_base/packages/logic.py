@@ -288,10 +288,13 @@ def get_packages(
             )
         res = parsed_packages
 
+    categories = get_store_categories(store)
+
     return {
         "packages": res,
         "total_pages": total_pages,
         "total_items": total_items,
+        "categories": categories,
     }
 
 
@@ -392,7 +395,16 @@ def get_store_categories(store_api) -> List[Dict[str, str]]:
     except StoreApiError:
         all_categories = []
 
-    return all_categories
+    for cat in all_categories["categories"]:
+        cat["display_name"] = format_slug(cat["name"])
+
+    categories = list(
+        filter(
+            lambda cat: cat["name"] != "featured", all_categories["categories"]
+        )
+    )
+
+    return categories
 
 
 def get_snaps_account_info(account_info):
