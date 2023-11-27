@@ -6,6 +6,7 @@ import json
 from tests.mock_data import (
     sample_charm_list,
     sample_snap_api_response,
+    sample_snap_categories_response,
 )
 from canonicalwebteam.store_base.app import create_app
 import functools
@@ -32,6 +33,20 @@ class TestStoreEndpoint(unittest.TestCase):
                 urlencode(
                     {"fields": "title,summary,media,publisher,categories"}
                 ),
+            ]
+        )
+
+        self.snaps_categories_api_url = "".join(
+            [
+                "https://api.snapcraft.io/v2/",
+                "snaps/categories",
+            ]
+        )
+
+        self.charms_categories_api_url = "".join(
+            [
+                "https://api.charmhub.io/v2/",
+                "charms/categories",
             ]
         )
 
@@ -69,6 +84,17 @@ class TestStoreEndpointWithCharmhub(TestStoreEndpoint):
         responses.add(
             responses.Response(
                 method="GET",
+                url=self.charms_categories_api_url,
+                body=json.dumps(
+                    {"categories": [sample_snap_categories_response]}
+                ),
+                status=200,
+            )
+        )
+
+        responses.add(
+            responses.Response(
+                method="GET",
                 url=self.charms_api_url,
                 body=json.dumps(sample_charm_list),
                 status=200,
@@ -89,6 +115,17 @@ class TestStoreEndpointWithSnapcraft(TestStoreEndpoint):
         app.config["WTF_CSRF_METHODS"] = []
         app.testing = True
         client = app.test_client()
+
+        responses.add(
+            responses.Response(
+                method="GET",
+                url=self.snaps_categories_api_url,
+                body=json.dumps(
+                    {"categories": [sample_snap_categories_response]}
+                ),
+                status=200,
+            )
+        )
 
         responses.add(
             responses.Response(

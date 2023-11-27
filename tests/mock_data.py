@@ -58,6 +58,8 @@ sample_snap_api_response = {
     "snap-id": "somerandomID",
 }
 
+sample_snap_categories_response = {"name": "art-and-design"}
+
 sample_charm_api_response = {
     "default-release": {
         "channel": {
@@ -193,6 +195,7 @@ sample_charm_list = {
         },
     ]
 }
+
 sample_snap_list = {
     "results": [
         {
