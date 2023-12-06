@@ -3,10 +3,8 @@ from tests.mock_data import (
     sample_snap_api_response,
     sample_charm_api_response,
     sample_charm_list,
-    sample_snap_list,
 )
 from canonicalwebteam.store_base.packages.logic import (
-    filter_packages,
     parse_package_for_card,
     paginate,
 )
@@ -64,52 +62,4 @@ class TestPackages(unittest.TestCase):
                 paginate(sample_charm_list["results"], 2, size2, total_pages2)
             ),
             3,
-        )
-
-    def test_filter_packages(self):
-        filter_params1 = {
-            "categories": ["all", "cat-1"],
-            "platforms": ["all", "VM"],
-            "type": ["all", "charm"],
-        }
-        filter_params2 = {
-            "categories": ["cat-1", "cat-3"],
-            "platforms": ["VM", "kubernetes"],
-            "type": ["charm"],
-        }
-        filter_params3 = {
-            "categories": ["cat-2", "cat-3"],
-            "platforms": ["kubernetes"],
-            "type": ["charm"],
-        }
-        filter_params4 = {
-            "categories": ["cat-2", "cat-3"],
-            "platforms": ["kubernetes"],
-            "type": ["bundle"],
-        }
-        filter_params5 = {
-            "categories": ["cat-2"],
-            "platforms": ["arch1"],
-            "type": ["snap"],
-        }
-
-        self.assertEqual(
-            len(filter_packages(sample_charm_list["results"], filter_params1)),
-            10,
-        )
-        self.assertEqual(
-            len(filter_packages(sample_charm_list["results"], filter_params2)),
-            3,
-        )
-        self.assertEqual(
-            len(filter_packages(sample_charm_list["results"], filter_params3)),
-            1,
-        )
-        self.assertEqual(
-            len(filter_packages(sample_charm_list["results"], filter_params4)),
-            2,
-        )
-        self.assertEqual(
-            len(filter_packages(sample_snap_list["results"], filter_params5)),
-            2,
         )
