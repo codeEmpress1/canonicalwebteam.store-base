@@ -31,7 +31,7 @@ Package = TypedDict(
 )
 
 
-def fetch_packages(store_api, fields: List[str], query) -> Packages:
+def fetch_packages(store_api, fields: List[str], query_params) -> Packages:
     """
     Fetches packages from the store API based on the specified fields.
 
@@ -45,7 +45,28 @@ def fetch_packages(store_api, fields: List[str], query) -> Packages:
     note: the response is cached for a maximum age of 3600 seconds.
     """
     store = store_api(talisker.requests.get_session())
-    packages = store.find(fields=fields, query=query).get("results", [])
+
+    if query_params:
+        category = query_params.get("categories", "")
+        query = query_params.get("q", "")
+        package_type = query_params.get("type", None)
+        if package_type == "all":
+            package_type = None
+        packages = store.find(
+            category=category, fields=fields, query=query, type=package_type
+        ).get("results", [])
+        platform = query_params.get("platforms", "")
+        if platform and platform != "all":
+            filtered_packages = []
+            for p in packages:
+                platforms = p["result"].get("deployable-on", [])
+                if platforms == []:
+                    platforms = ["vm"]
+                if platform in platforms:
+                    filtered_packages.append(p)
+            packages = filtered_packages
+    else:
+        packages = store.find(fields=fields).get("results", [])
     response = make_response({"packages": packages})
     response.cache_control.max_age = 3600
     return response.json
@@ -239,9 +260,7 @@ def get_packages(
     libraries: bool,
     fields: List[str],
     size: int = 10,
-    page: int = 1,
-    query=None,
-    filters: Dict = {},
+    query_params: Dict[str, Any] = {},
 ) -> List[Dict[str, Any]]:
     """
     Retrieves a list of packages from the store based on the specified
@@ -260,33 +279,21 @@ def get_packages(
             the total pages
     """
 
-    packages = fetch_packages(store, fields, query).get("packages", [])
+    packages = fetch_packages(store, fields, query_params).get("packages", [])
     total_pages = -(len(packages) // -size)
 
-    if filters:
-        parsed_packages = []
-        for package in packages:
-            parsed_packages.append(
-                parse_package_for_card(
-                    package, store_name, store, publisher, libraries
-                )
+    total_pages = -(len(packages) // -size)
+    total_items = len(packages)
+    page = int(query_params.get("page", 1))
+    packages_per_page = paginate(packages, page, size, total_pages)
+    parsed_packages = []
+    for package in packages_per_page:
+        parsed_packages.append(
+            parse_package_for_card(
+                package, store_name, store, publisher, libraries
             )
-        filtered_packages = filter_packages(parsed_packages, filters)
-        total_pages = -(len(filtered_packages) // -size)
-        total_items = len(filtered_packages)
-        res = paginate(filtered_packages, page, size, total_pages)
-    else:
-        total_pages = -(len(packages) // -size)
-        total_items = len(packages)
-        packages_per_page = paginate(packages, page, size, total_pages)
-        parsed_packages = []
-        for package in packages_per_page:
-            parsed_packages.append(
-                parse_package_for_card(
-                    package, store_name, store, publisher, libraries
-                )
-            )
-        res = parsed_packages
+        )
+    res = parsed_packages
 
     categories = get_store_categories(store)
 
@@ -296,55 +303,6 @@ def get_packages(
         "total_items": total_items,
         "categories": categories,
     }
-
-
-def filter_packages(
-    packages: List[Packages], filter_params: Dict[str, List[str]]
-):
-    """
-    Filters the list of packages based on the specified filter parameters.
-
-    :param packages: the list of packages to filter.
-    :param filter_params: The filter parameters
-    :returns: the filtered list of packages.
-    """
-
-    result = packages
-    for key, val in filter_params.items():
-        if key == "categories" and "all" not in val:
-            result = list(
-                filter(
-                    lambda package: len(
-                        [
-                            cat
-                            for cat in package["categories"]
-                            if cat["name"] in val
-                        ]
-                    )
-                    != 0,
-                    result,
-                )
-            )
-        if (key == "platforms" or key == "architectures") and "all" not in val:
-            platform = "platforms" if key == "platforms" else "architectures"
-            result = list(
-                filter(
-                    lambda package: len(
-                        [p for p in package["package"][platform] if p in val]
-                    )
-                    != 0,
-                    result,
-                )
-            )
-
-        if key == "type" and "all" not in val:
-            result = list(
-                filter(
-                    lambda package: package["package"]["type"] in val, result
-                )
-            )
-
-    return result
 
 
 def format_slug(slug):

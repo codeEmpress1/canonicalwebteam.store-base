@@ -26,10 +26,7 @@ def init_packages(app):
     def get_store_packages():
         app_name = app.name
         args = dict(request.args)
-        args.pop("page", {})
-        args.pop("q", {})
         libraries = bool(args.pop("fields", ""))
-        filters = args
         params = PACKAGE_PARAMS[app_name]
         store, publisher, fields, size = (
             params["store"],
@@ -38,20 +35,9 @@ def init_packages(app):
             params["size"],
         )
 
-        page = int(request.args.get("page", 1))
-        query = request.args.get("q")
-
         res = make_response(
             get_packages(
-                store,
-                publisher,
-                app_name,
-                libraries,
-                fields,
-                size,
-                page,
-                query,
-                filters,
+                store, publisher, app_name, libraries, fields, size, args
             )
         )
         return res
