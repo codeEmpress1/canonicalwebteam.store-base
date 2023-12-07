@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "canonicalwebteam-store-base"
 
-version = "0.3.4"
+version = "0.3.5"
 description = "An application base for all stores"
 authors = ["Canonical Webteam <webteam@canonical.com>"]
 license = "GPL3"

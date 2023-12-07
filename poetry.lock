@@ -92,13 +92,13 @@ Werkzeug = ">=1.0.0,<1.2"
 
 [[package]]
 name = "canonicalwebteam-store-api"
-version = "4.7.0"
+version = "4.7.2"
 description = ""
 optional = false
 python-versions = ">=3.6,<4.0"
 files = [
-    {file = "canonicalwebteam_store_api-4.7.0-py3-none-any.whl", hash = "sha256:1fa30917284b14ec1c48694628fb2a1f25c8f01bde615e5019d6ecb9f752ee6c"},
-    {file = "canonicalwebteam_store_api-4.7.0.tar.gz", hash = "sha256:c6636ec2c46909bcf94c2f01cf68993e1c51a634ef0352c030f54b3ab7857c0c"},
+    {file = "canonicalwebteam_store_api-4.7.2-py3-none-any.whl", hash = "sha256:ecbfd7f3ce4d20077310ad05c21ee2eeb1d11b9f7c82ace69245337d405f014d"},
+    {file = "canonicalwebteam_store_api-4.7.2.tar.gz", hash = "sha256:9072374928d29bf2d6d8845c613b0aa77e24b2a95481aae4242bc9a7826afe62"},
 ]
 
 [package.dependencies]
@@ -1409,4 +1409,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8.1,<4.0"
-content-hash = "6216592745817465b3ce6b3282c7c08ec163952cbf7af5b916c454c4fe598f8f"
+content-hash = "3ba2cd6299a064a3c8a7b9789aa39ccb01c7a3f04d62ef5ec1ccad904d0b972a"
