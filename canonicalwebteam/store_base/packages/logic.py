@@ -166,9 +166,7 @@ def parse_package_for_card(
             ).get("libraries", [])
         resp["package"]["type"] = package.get("type", "")
         resp["package"]["name"] = package.get("name", "")
-        resp["package"]["description"] = result.get("summary", "").split(".")[
-            0
-        ]
+        resp["package"]["description"] = result.get("summary", "")
         resp["package"]["display_name"] = result.get(
             "title", format_slug(package.get("name", ""))
         )
@@ -206,7 +204,7 @@ def parse_package_for_card(
     if store_name.startswith("snapcraft"):
         snap = package.get("snap", {})
         publisher = snap.get("publisher", {})
-        resp["package"]["description"] = snap.get("summary", "").split(".")[0]
+        resp["package"]["description"] = snap.get("summary", "")
         resp["package"]["display_name"] = snap.get("title", "")
         resp["package"]["type"] = "snap"
         resp["package"]["name"] = package.get("name", "")
