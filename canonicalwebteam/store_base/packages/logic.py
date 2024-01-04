@@ -38,38 +38,47 @@ def fetch_packages(store_api, fields: List[str], query_params) -> Packages:
     :param: store_api: The specific store API object.
     :param: fields (List[str]): A list of fields to include in the package
     data.
-    :param: query: A search query
+    :param: query_params: A search query
 
     :returns: a dictionary containing the list of fetched packages.
-
-    note: the response is cached for a maximum age of 3600 seconds.
     """
     store = store_api(talisker.requests.get_session())
 
-    if query_params:
-        category = query_params.get("categories", "")
-        query = query_params.get("q", "")
-        package_type = query_params.get("type", None)
-        if package_type == "all":
-            package_type = None
-        packages = store.find(
-            category=category, fields=fields, query=query, type=package_type
-        ).get("results", [])
-        platform = query_params.get("platforms", "")
-        if platform and platform != "all":
-            filtered_packages = []
-            for p in packages:
-                platforms = p["result"].get("deployable-on", [])
-                if platforms == []:
-                    platforms = ["vm"]
-                if platform in platforms:
-                    filtered_packages.append(p)
-            packages = filtered_packages
-    else:
-        packages = store.find(fields=fields).get("results", [])
-    response = make_response({"packages": packages})
-    response.cache_control.max_age = 3600
-    return response.json
+    category = query_params.get("categories", "")
+    query = query_params.get("q", "")
+    package_type = query_params.get("type", None)
+    platform = query_params.get("platforms", "")
+    architecture = query_params.get("architecture", "")
+
+    if package_type == "all":
+        package_type = None
+
+    args = {
+        "category": category,
+        "fields": fields,
+        "query": query,
+    }
+
+    if package_type:
+        args["type"] = package_type
+
+    packages = store.find(**args).get("results", [])
+
+    if platform and platform != "all":
+        filtered_packages = []
+        for p in packages:
+            platforms = p["result"].get("deployable-on", [])
+            if not platforms:
+                platforms = ["vm"]
+            if platform in platforms:
+                filtered_packages.append(p)
+        packages = filtered_packages
+
+    if architecture and architecture != "all":
+        args["architecture"] = architecture
+        packages = store.find(**args).get("results", [])
+
+    return packages
 
 
 def fetch_package(store_api, package_name: str, fields: List[str]) -> Package:
@@ -166,9 +175,7 @@ def parse_package_for_card(
             ).get("libraries", [])
         resp["package"]["type"] = package.get("type", "")
         resp["package"]["name"] = package.get("name", "")
-        resp["package"]["description"] = result.get("summary", "").split(".")[
-            0
-        ]
+        resp["package"]["description"] = result.get("summary", "")
         resp["package"]["display_name"] = result.get(
             "title", format_slug(package.get("name", ""))
         )
@@ -206,7 +213,7 @@ def parse_package_for_card(
     if store_name.startswith("snapcraft"):
         snap = package.get("snap", {})
         publisher = snap.get("publisher", {})
-        resp["package"]["description"] = snap.get("summary", "").split(".")[0]
+        resp["package"]["description"] = snap.get("summary", "")
         resp["package"]["display_name"] = snap.get("title", "")
         resp["package"]["type"] = "snap"
         resp["package"]["name"] = package.get("name", "")
@@ -279,7 +286,8 @@ def get_packages(
             the total pages
     """
 
-    packages = fetch_packages(store, fields, query_params).get("packages", [])
+    packages = fetch_packages(store, fields, query_params)
+
     total_pages = -(len(packages) // -size)
 
     total_pages = -(len(packages) // -size)
